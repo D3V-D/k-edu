@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --images-width: clamp(300px, 40vw, 500px);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(8, 192, 146);
+    color: white;
+    overflow-x: hidden;
+    font-family: 'Urbanist', sans-serif;
+}
+
+#header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 105vh;
+    justify-content: center;
+    align-items: center;
+}
+
+#text-container {
+    text-align: center;
+    position: relative;
+    z-index: 3;
+}
+
+h1 {
+    font-weight: 900;
+    font-size: clamp(2rem, 5vw, 4rem);
+}
+
+h2 {
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+#button-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+.btn {
+    width: clamp(8rem, 12vw, 12rem);
+    font-size: clamp(1rem, 1.2vw, 1.2rem);
+    aspect-ratio: 4/1;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    border: solid 1px rgb(1, 37, 70);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: width 0.4s ease, height 04s ease, color 0.4s ease, background-color 0.4s ease;
+}
+
+#call-to-action {
+    background-color: aquamarine;
+    color: rgb(1, 37, 70);
+    gap: 8px;
+}
+
+#link-icon {
+    transition: 0.54s ease;
+}
+
+#call-to-action:hover {
+    background-color:rgb(1, 37, 70);
+    color: #7fffd4;
+}
+
+#call-to-action:hover > #link-icon {
+    filter: brightness(0) saturate(1) invert(1) sepia(90%) saturate(1000%) hue-rotate(69deg) brightness(100%) contrast(100%);
+}
+
+#learn-more {
+    background-color: rgb(181, 227, 248);
+    color: rgb(1, 37, 70);
+}
+
+#learn-more:hover {
+    background-color:rgb(1, 37, 70);
+    color: rgb(181, 227, 248);
+}
+
+.floating {
+    position: absolute;
+    width: var(--images-width);
+    border: solid 1px black;
+    box-shadow: 2px 2px rgb(1, 37, 70);
+    border-radius: 5px;
+    z-index: 2;
+}
+
+#float-1 {
+    bottom: 100%;
+    right: calc(135% - var(--images-width));
+    transform: rotate(-20deg);
+}
+
+#float-2 {
+    bottom: 110%;
+    left: calc(140% - var(--images-width));
+    transform: rotate(30deg);
+}
+
+#float-3 {
+    top: 135%;
+    right: calc(90% - var(--images-width));
+    transform: rotate(4deg);
+}
+
+#features {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background-color:rgb(1, 37, 70);
+}
+
+.top-wave {
+    position: absolute;
+    top: -5%;
+    left: 0;
+}
