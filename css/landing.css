@@ -12,12 +12,12 @@
 
 html, body {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
     background-color: rgb(8, 192, 146);
     color: white;
-    overflow-x: hidden;
     font-family: 'Urbanist', sans-serif;
 }
 
