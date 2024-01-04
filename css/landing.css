@@ -35,6 +35,7 @@ body {
     text-align: center;
     position: relative;
     z-index: 3;
+    translate: translateZ(0);
 }
 
 h1 {
