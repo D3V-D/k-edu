@@ -10,6 +10,10 @@
     box-sizing: border-box;
 }
 
+html, body {
+    scroll-behavior: smooth;
+}
+
 body {
     background-color: rgb(8, 192, 146);
     color: white;
@@ -36,11 +40,18 @@ body {
 h1 {
     font-weight: 900;
     font-size: clamp(2rem, 5vw, 4rem);
+    color:rgb(244, 250, 255);
 }
 
 h2 {
     font-weight: 400;
     font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: rgb(248, 252, 255);
+}
+
+h3 {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: rgb(248, 252, 255);
 }
 
 #button-row {
@@ -82,7 +93,7 @@ h2 {
 }
 
 #call-to-action:hover > #link-icon {
-    filter: brightness(0) saturate(1) invert(1) sepia(90%) saturate(1000%) hue-rotate(69deg) brightness(100%) contrast(100%);
+    filter: invert(1) sepia(90%) saturate(1100%) hue-rotate(69deg) brightness(100%) contrast(110%);
 }
 
 #learn-more {
@@ -124,13 +135,125 @@ h2 {
 
 #features {
     width: 100vw;
-    height: 100vh;
+    height: fit-content;
+    padding-bottom: 5vh;
     position: relative;
     background-color:rgb(1, 37, 70);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .top-wave {
     position: absolute;
     top: -5%;
     left: 0;
+}
+
+#features-header {
+    margin-top: 25vw;
+    text-align: center;
+}
+
+#contact-link {
+    color: aquamarine;
+    text-decoration: underline;
+    text-decoration: dotted underline;
+    transition: color 0.3s ease;
+}
+
+#contact-link:hover {
+    color: rgb(49, 163, 100);
+    text-decoration: underline;
+}
+
+#feature-timeline {
+    padding-block: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.feature {
+    display: flex;
+    flex-direction: row;
+    gap: 5vw;
+}
+
+.feature-check {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.timeline-connector-top {
+    width: 2px;
+    height: 40%;
+    background-color: white;
+}
+
+.timeline-connector-bottom {
+    width: 2px;
+    height: 40%;
+    background-color: white;
+}
+
+.feature-check > img {
+    transition: 0.4s ease;
+    width: clamp(40px, 4vw, 60px);
+}
+
+.feature-check > .checked:hover {
+    filter: sepia(90%) saturate(900%) hue-rotate(69deg) brightness(90%) contrast(100%);
+}
+
+.feature-text {
+    width: clamp(300px, 50vw, 600px);
+    border: solid 1px aliceblue;
+    padding: 10px;
+    padding-bottom: 15px;
+    margin-top: clamp(40px, 2vh, 60px);
+    border-radius: 4px;
+    cursor: default;
+    transition: 0.4s ease;
+}
+
+.completed-text:hover {
+    color: white;
+}
+
+.completed-text:hover > .feature-title {
+    text-decoration: none;
+    color: white;
+}
+
+.completed-text {
+    color: grey;
+}
+
+.completed-text > .feature-title {
+    text-decoration: line-through;
+    color: rgb(180, 180, 180);
+    transition: 0.4s ease;
+}
+
+.feature-btn {
+    margin-top: 10px;
+    background-color: white;
+    color: rgb(1, 37, 70);
+    font-weight: 800;
+}
+
+.feature-btn:hover {
+    background-color: rgb(41, 124, 110);
+    color: rgb(222, 255, 251);
+}
+
+.timeline-end > .feature-check {
+    height: clamp(70px, 7.5vw, 100px);
+}
+
+.timeline-end > .feature-check > img {
+    transform: translateY(-60%);
 }
