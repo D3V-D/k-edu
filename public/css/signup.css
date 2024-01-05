@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(110, 150, 202); /** backup background-color **/
+    background-image: url('../assets/imgs/space.jpg'); /** backup image **/
+    background-image: url('../assets/imgs/space.gif');
+    background-size: cover;
+    color: rgb(243, 254, 255);
+    overflow: hidden;
+    animation: movebg 5s ease-in-out infinite;
+}
+
+
+h2 {
+    font-weight: 700;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+}
+
+#signup-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    width: clamp(350px, 50vw, 900px);
+    padding: 50px;
+    background-color: #2e484d56;
+    border-radius: 10px;
+    border: solid 1px rgb(78, 78, 78);
+    backdrop-filter: blur(5px);
+}
+
+.input-deco-text {
+    color: rgb(57, 253, 237);
+}
+
+.input-container {
+    display: flex;
+    flex-direction: row;
+    font-size: clamp(0.9rem, 1vw, 1rem);
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+}
+
+#email-container {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#email-inline {
+    display: flex;
+    flex-direction: row;
+    margin-left: 4ch;
+}
+
+input {
+    font-size: clamp(0.9rem, 1vw, 1rem);
+    font-family: monospace;
+    color: white;
+    background: transparent;
+    border: none;
+    min-width: 1ch;
+}
+
+#email {
+    margin-left: 1ch;
+}
+
+input:focus {
+    outline: none;
+    filter: brightness(1.2);
+}
+
+input:placeholder-shown {
+    color: rgb(243, 254, 255);
+    border-bottom: solid 1px rgb(0, 162, 255);
+}
+

@@ -9,7 +9,40 @@
         <link href="css/signup.css" rel="stylesheet">
     </head>
     <body>
+        <form id="signup-form">
+            <h2 id="welcome">
+                <p id="welcome-line1">Welcome to K-Edu!</p>
+                <p id="welcome-line2">First off, what's your name?</p>
+            </h2>
+            <div class="input-container" id="name-container">
+                <span class="input-deco-text">&lt;user name="</span>
+                <input required onkeydown="handleNameKeyDown(event)" type="text" id="name" placeholder="_">
+                <span class="input-deco-text">"&gt;</span>
+            </div>      
+            <h2 id="email-prompt">
+                Great! Now, what's your email?
+            </h2>  
+            <div class="input-container" id="email-container">
+                <span class="input-deco-text" id="email-deco-1">user {</span>
+                <span id="email-inline">
+                    <span class="input-deco-text" id="email-deco-2">email:</span>
+                    <input required onkeydown="handleEmailKeyDown(event)" type="email" id="email" placeholder="_">
+                    <span class="input-deco-text" id="email-deco-3">;</span>
+                </span>                
+                <span class="input-deco-text" id="email-deco-4">}</span>
+            </div>
+            <h2 id="password-prompt">
+                Okay, finally, what password would you like to use? Make sure it's strong.
+            </h2>
+            <div class="input-container" id="password-container">
+                <span class="input-deco-text">var password =&nbsp;</span>
+                <input required onkeydown="handlePasswordKeyDown(event)" type="password" id="password" placeholder="_">
+                <span class="input-deco-text">;</span>
+            </div>
+            <span id="password-error"></span>
+        </form>
         
+        <script src="js/signup-anim.js"></script>
         <script src="js/signup.js"></script>
     </body>
 </html>

@@ -1,7 +1,7 @@
 // signup.mjs
 
 // Import Firebase Admin SDK
-import admin from 'firebase-admin';
+import admin, { app } from 'firebase-admin';
 require ('dotenv').config();
 
 // Initialize Firebase Admin SDK with service account credentials
@@ -26,18 +26,27 @@ admin.initializeApp({
 export async function handler(event) {
   try {
     // Access request body parameters sent from the frontend
-    const { email, password } = JSON.parse(event.body);
+    const { displayName, email, password, accountType } = JSON.parse(event.body);
 
     // Create user using Firebase Admin SDK
     const userRecord = await admin.auth().createUser({
-      email,
-      password,
-    });
+      email: email,
+      password: password,
+      displayName: displayName,
+    })
+    const uid = userRecord.uid;
+
+    await admin.auth().setCustomUserClaims(uid, {
+      role: accountType
+    })
+
+    const userRec = await admin.auth().getUser(uid);
+    const { role } = userRec.customClaims
 
     // Return success response if user creation is successful
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'User created successfully', user: userRecord.toJSON() }),
+      body: JSON.stringify({ message: 'User created successfully with role', user: userRecord.toJSON(), 'role': role }),
     };
   } catch (error) {
     // Return error response if user creation fails
