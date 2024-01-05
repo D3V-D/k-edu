@@ -1,6 +1,9 @@
 [dev]
     publish = "public" 
 
+[build]
+    publish = "public"
+
 [[redirects]]
     from = "/"
     to = "/landing.html"
