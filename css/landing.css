@@ -108,30 +108,50 @@ h3 {
 }
 
 .floating {
+    --translateY: 0px;
+    --rotation: 0deg;
     position: absolute;
     width: var(--images-width);
     border: solid 1px black;
     box-shadow: 2px 2px rgb(1, 37, 70);
     border-radius: 5px;
     z-index: 2;
+    transform: translateY(var(--translateY)) rotate(var(--rotation));
 }
 
 #float-1 {
     bottom: 100%;
     right: calc(135% - var(--images-width));
-    transform: rotate(-20deg);
+    --rotation: -20deg;
 }
 
 #float-2 {
     bottom: 110%;
     left: calc(140% - var(--images-width));
-    transform: rotate(30deg);
+    --rotation: 30deg;
 }
 
 #float-3 {
     top: 135%;
     right: calc(90% - var(--images-width));
-    transform: rotate(4deg);
+    --rotation: 4deg;
+}
+
+.star {
+    border: none;
+    box-shadow: none;
+    width: 20px;
+    animation: bob 3s ease-in-out infinite;
+}
+
+#star-1 {
+    top: -20px;
+}
+
+@keyframes bob {
+    50% {
+        transform: translateY(-20px) rotate(var(--rotation));
+    }
 }
 
 #features {
