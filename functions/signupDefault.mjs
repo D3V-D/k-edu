@@ -1,10 +1,7 @@
-// signup.mjs
-
 // Import Firebase Admin SDK
 import admin, { app } from 'firebase-admin';
 require ('dotenv').config();
 
-// Initialize Firebase Admin SDK with service account credentials
 const serviceAccount = {
   type: process.env.FIREBASE_TYPE,
   project_id: process.env.FIREBASE_PROJECT_ID,
@@ -23,8 +20,10 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 
-export async function handler(event) {
+export async function handler(event, context) {
   try {
+    // Initialize Firebase Admin SDK with service account credentials
+    
     // Access request body parameters sent from the frontend
     const { displayName, email, password, accountType } = JSON.parse(event.body);
 

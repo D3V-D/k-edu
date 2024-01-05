@@ -32,6 +32,7 @@ async function initialAnimation() {
     await typeWriter(document.getElementById("welcome-line1"));
     await typeWriter(document.getElementById("welcome-line2"));
     document.getElementById("name-container").style.display = "flex";
+    document.getElementById('name').focus()
 }
 
 initialAnimation();
@@ -52,6 +53,7 @@ async function revealEmailPrompt() {
     
     await typeWriter(prompt);
     emailContainer.style.display = "block";
+    document.getElementById('email').focus()
 }
 
 /** email to password prompt */
@@ -70,6 +72,7 @@ async function revealPasswordPrompt() {
 
     await typeWriter(prompt);
     passwordContainer.style.display = "flex";
+    document.getElementById('password').focus()
 }
 
 /** make sure password is secure */
