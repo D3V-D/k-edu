@@ -24,83 +24,125 @@ async function initialAnimation() {
     document.getElementById("welcome-line1").style.display = "none";
     document.getElementById("welcome-line2").style.display = "none";
     document.getElementById("name-container").style.display = "none";
+    document.getElementById("role-prompt").style.display = "none";
+    document.getElementById("role-container").style.display = "none";
     document.getElementById("email-prompt").style.display = "none";
     document.getElementById("email-container").style.display = "none";
     document.getElementById("password-prompt").style.display = "none";
     document.getElementById("password-container").style.display = "none";
 
+    document.querySelectorAll(".continue-btn").forEach(btn => {
+        btn.style.display = "none";
+    })
+
+    document.getElementById("signup-btn").style.height = "0";
+
     await typeWriter(document.getElementById("welcome-line1"));
     await typeWriter(document.getElementById("welcome-line2"));
     document.getElementById("name-container").style.display = "flex";
+    document.getElementById("name-continue-btn").style.display = "flex";
     document.getElementById('name').focus()
 }
 
 initialAnimation();
     
-/** name to email prompt*/
+/** name to role prompt*/
 async function handleNameKeyDown(e) {
     if (e.key == "Enter") {
         e.preventDefault();
-        if (window.getComputedStyle(document.getElementById("email-container")).getPropertyValue("display") == "none") {
-            await revealEmailPrompt();
-        }
+        await revealRolePrompt();
     }
 }
 
-async function revealEmailPrompt() {
-    const prompt = document.getElementById("email-prompt");
-    const emailContainer = document.getElementById("email-container");
-    
-    await typeWriter(prompt);
-    emailContainer.style.display = "block";
-    document.getElementById('email').focus()
+async function revealRolePrompt() {
+    if (window.getComputedStyle(document.getElementById("role-prompt")).getPropertyValue("display") == "none") {
+        const prompt = document.getElementById("role-prompt");
+        const roleContainer = document.getElementById("role-container");
+        const nameContinueButton = document.getElementById("name-continue-btn");
+
+        nameContinueButton.style.display = "none";
+        await typeWriter(prompt);
+        roleContainer.style.display = "flex";
+        document.getElementById('role-continue-btn').style.display = "flex";
+    }
 }
+
+
+/** role to email prompt */
+async function revealEmailPrompt() {
+    if (window.getComputedStyle(document.getElementById("email-container")).getPropertyValue("display") == "none") {
+        const prompt = document.getElementById("email-prompt");
+        const emailContainer = document.getElementById("email-container");
+        const roleContinueButton = document.getElementById("role-continue-btn");
+
+        roleContinueButton.style.display = "none";
+        await typeWriter(prompt);
+        emailContainer.style.display = "block";
+        document.getElementById('email-continue-btn').style.display = "flex";
+        document.getElementById('email').focus();
+    }
+}
+
 
 /** email to password prompt */
 async function handleEmailKeyDown(e) {
     if (e.key == "Enter") {
         e.preventDefault();
-        if (window.getComputedStyle(document.getElementById("password-prompt")).getPropertyValue("display") == "none") {
-            await revealPasswordPrompt();
-        }
+        await revealPasswordPrompt();
     }
 }
 
 async function revealPasswordPrompt() {
-    const prompt = document.getElementById("password-prompt");
-    const passwordContainer = document.getElementById("password-container");
+    if (window.getComputedStyle(document.getElementById("password-prompt")).getPropertyValue("display") == "none") {
+        const prompt = document.getElementById("password-prompt");
+        const passwordContainer = document.getElementById("password-container");
 
-    await typeWriter(prompt);
-    passwordContainer.style.display = "flex";
-    document.getElementById('password').focus()
+        document.getElementById("email-continue-btn").style.display = "none";
+        await typeWriter(prompt);
+        passwordContainer.style.display = "flex";
+        document.getElementById("password-check-btn").style.display = "flex";
+        document.getElementById('password').focus()
+    }
 }
 
 /** make sure password is secure */
 async function handlePasswordKeyDown(e) {
     if (e.key == "Enter") {
         e.preventDefault();
-
-        let password = document.getElementById("password").value;
-        const passwordError = document.getElementById("password-error");
-
-        passwordError.style.color = "red";
-        if (password.length < 8) {
-            passwordError.innerHTML = "Password must be at least 8 characters long.";
-        } else if (password.toLowerCase().includes(document.getElementById("name").value.toLowerCase())) {
-            passwordError.innerHTML = "Password cannot contain your name.";
-        } else if (!/[A-Z]/.test(password)) {
-            passwordError.innerHTML = "Password must have at least 1 uppercase letter.";
-        } else if (!/[a-z]/.test(password)) {
-            passwordError.innerHTML = "Password must have at least 1 lowercase letter.";
-        } else if (!/[0-9]/.test(password)) {
-            passwordError.innerHTML = "Password must have at least 1 number.";
-        } else if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
-            passwordError.innerHTML = "Password must have at least 1 special character.";
-        } else {
-            passwordError.style.color = "green";
-            passwordError.innerHTML = "Password passes all tests.";
-        }
     }
+}
+
+async function checkPassword() {
+    let password = document.getElementById("password").value;
+    const passwordError = document.getElementById("password-error");
+
+    passwordError.style.color = "red";
+    if (password.length < 8) {
+        passwordError.innerHTML = "Password must be at least 8 characters long.";
+    } else if (password.toLowerCase().includes(document.getElementById("name").value.toLowerCase())) {
+        passwordError.innerHTML = "Password cannot contain your name.";
+    } else if (!/[A-Z]/.test(password)) {
+        passwordError.innerHTML = "Password must have at least 1 uppercase letter.";
+    } else if (!/[a-z]/.test(password)) {
+        passwordError.innerHTML = "Password must have at least 1 lowercase letter.";
+    } else if (!/[0-9]/.test(password)) {
+        passwordError.innerHTML = "Password must have at least 1 number.";
+    } else if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+        passwordError.innerHTML = "Password must have at least 1 special character.";
+    } else {
+
+        if (document.getElementById("password-check-btn").style.display == "flex") {
+            document.getElementById("password-check-btn").style.display = "none";
+        }
+
+        passwordError.style.color = "green";
+        passwordError.innerHTML = "Password passes all tests.";
+        document.getElementById("signup-btn").style.height = "auto";
+        document.getElementById("signup-btn").style.opacity = "1";
+        return "passed";
+    }
+
+
 }
 
 /** helper functions */

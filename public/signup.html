@@ -22,7 +22,29 @@
                 <span class="input-deco-text">&lt;user name="</span>
                 <input required onkeydown="handleNameKeyDown(event)" type="text" id="name" placeholder="_">
                 <span class="input-deco-text">"&gt;</span>
-            </div>      
+            </div>  
+            <button id="name-continue-btn" class="continue-btn" onclick="revealRolePrompt()">
+                Continue <div class="stem"></div><img src="assets/icons/arrow-right-solid.svg" aria-hidden="true">
+            </button>
+            <h2 id="role-prompt">
+                Okay, are you signing up as a student or a teacher?
+            </h2>
+            <fieldset class="input-container" id="role-container">
+                  <legend>Select Your Role</legend>
+                  
+                  <div class="role-holder">
+                      <input required name="role" type="radio" id="teacher" value="teacher"> 
+                      <label for="teacher" class="role-option">Teacher.tch <img src="assets/icons/teacher.svg" aria-hidden="true"></label>
+                  </div>
+                  
+                  <div class="role-holder">
+                      <input required name="role" type="radio" id="student" value="student">
+                      <label for="student" class="role-option">Student.std <img src="assets/icons/grad-cap.svg" aria-hidden="true"></label>   
+                  </div>      
+            </fieldset>
+            <button id="role-continue-btn" class="continue-btn" onclick="revealEmailPrompt()">
+                Continue <div class="stem"></div><img src="assets/icons/arrow-right-solid.svg" aria-hidden="true">    
+            </button>
             <h2 id="email-prompt">
                 Great! Now, what's your email?
             </h2>  
@@ -35,6 +57,9 @@
                 </span>                
                 <span class="input-deco-text" id="email-deco-4">}</span>
             </div>
+            <button id="email-continue-btn" class="continue-btn" onclick="revealPasswordPrompt()">
+                Continue <div class="stem"></div><img src="assets/icons/arrow-right-solid.svg" aria-hidden="true">
+            </button>
             <h2 id="password-prompt">
                 Okay, finally, what password would you like to use? Make sure it's strong.
             </h2>
@@ -44,6 +69,10 @@
                 <span class="input-deco-text">;</span>
             </div>
             <span id="password-error"></span>
+            <a id="password-check-btn" class="continue-btn" onclick="checkPassword()">
+                Check Password <div class="stem"></div><img src="assets/icons/arrow-right-solid.svg" aria-hidden="true">
+            </a>
+            <button id="signup-btn" type="submit">Sign up!</button>
         </form>
         
         <script src="js/signup-anim.js"></script>
