@@ -68,14 +68,73 @@
                 background-color: rgb(82, 196, 158);
             }
         </style>
+
+        <noscript>
+            <style>
+                body {
+                    background-image: linear-gradient(60deg, #2a5ce7, #0b916f);
+                    background-size: 300% 300%;
+                    -webkit-animation: bgShift 20s ease infinite;
+                    -moz-animation: bgShift 20s ease infinite;
+                    animation: bgShift 20s ease infinite;
+                }
+
+                @-webkit-keyframes bgShift {
+                    0%{background-position:0% 50%}
+                    50%{background-position:100% 50%}
+                    100%{background-position:0% 50%}
+                }
+                @-moz-keyframes bgShift {
+                    0%{background-position:0% 50%}
+                    50%{background-position:100% 50%}
+                    100%{background-position:0% 50%}
+                }
+                @keyframes bgShift {
+                    0%{background-position:0% 50%}
+                    50%{background-position:100% 50%}
+                    100%{background-position:0% 50%}
+                }
+
+                #star-image {
+                    opacity: 0;
+                    position: relative;
+                }
+
+                h1 {
+                    position: relative;
+                }
+
+                h1::after {
+                    content: "0";
+                    position: absolute;
+                    left: 1.5ch;
+                }
+
+                #home-link {
+                    display: none;
+                }
+            </style>
+        </noscript>
     </head>
     <body>
-        <h1>4<img src="assets/icons/star-solid.svg" aria-hidden="true">4 Error!</h1>
-        <h2>
+        <h1>4<img id="star-image" src="assets/icons/star-solid.svg" aria-hidden="true">4 Error!</h1>
+        <h2 style="text-align: center">
             The page you are looking for does not exist.
         </h2>
         <h3>
-            <a href="./">Back to Home</a>
+            <a id="home-link" href="#">Back to Home</a>
+            <noscript>
+                <a href="https://k-edu.netlify.app">Back to Home</a>
+            </noscript>
         </h3>
+
+        <script>
+            let currentDomain = window.location.origin;
+            document.getElementById("home-link").href = currentDomain
+
+            document.getElementById("star-image").src = currentDomain + "/assets/icons/star-solid.svg"
+
+            document.body.style.backgroundImage = "url('" + currentDomain + "/assets/imgs/space.jpg')";
+        </script>
     </body>
 </html>
