@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login to K-Edu</title>
+
+        <link href="css/login.css" rel="stylesheet">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/imgs/favicon_io/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/imgs/favicon_io/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/imgs/favicon_io/favicon-16x16.png">
+        <link rel="manifest" href="assets/imgs/favicon_io/site.webmanifest">
+    </head>
+    <body>
+
+        <noscript>
+            <h1>You have javascript disabled, or your browser does not support it.</h1>
+            <h2>Unfortunately, you can't login to K-Edu without javascript on.</h2>
+        </noscript>
+
+        <a href="../">
+            <img src="assets/imgs/favicon_io/android-chrome-512x512.png" id="home-link-img" alt="k-edu logo">
+        </a>
+
+        <div id="login">
+            <div class="row" id="title-row">
+                <img src="assets/imgs/favicon_io/android-chrome-512x512.png" id="logo">
+                <h1 id="welcome">Login to K-Edu</h1>
+            </div>
+
+            <form id="login-form">
+                <div class="input-container">
+                    <input class="input-box" type="email" id="email" placeholder="">
+                    <label for="email" class="input-label">Email</label>
+                </div>
+                <div class="input-container">
+                    <input class="input-box" type="password" id="password" placeholder="">
+                    <label for="password" class="input-label">Password</label>
+                </div>
+                <div class="row">
+                    <a id="forgot-password" href="../forgot-password">Forgot Password</a>
+                    <a id="signup" href="../signup">Sign Up</a>
+                </div>
+                <button id="login-btn" type="submit">Login</button>
+            </form>
+        </div>
+        
+        <script src="js/firebase.js"></script>
+        <script src="js/login.js"></script>
+        <script src="js/login-anim.js"></script>
+    </body>
+</html>

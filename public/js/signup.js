@@ -44,6 +44,7 @@ function createNewUser(inputName, inputEmail, inputPassword, inputAccountType) {
 
             if (!data.error) {
                 alert("User created successfully. Redirecting...")
+                window.location.href = "../login"
             }
         })
         .catch((error) => {

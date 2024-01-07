@@ -24,6 +24,41 @@ body {
     animation: movebg 5s ease-in-out infinite;
 }
 
+#already-signed-up {
+    position: absolute;
+    font-size: clamp(0.9rem, 1vw, 1rem);
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    top: 0;
+    right: 0;
+    margin: 20px;
+}
+
+#logo {
+    width: clamp(40px, 5vw, 60px);
+    top: 0;
+    left: 0;
+    position: absolute;
+    margin: 20px;
+}
+
+#login-link {
+    border: none;
+    font-family: monospace;
+    width: fit-content;
+    background-color: transparent;
+    cursor: pointer;
+    color: white;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#login-link:hover > .stem {
+    width: 10px;
+}
 
 h2 {
     font-weight: 700;
@@ -41,6 +76,9 @@ h2 {
     border-radius: 10px;
     border: solid 1px rgb(78, 78, 78);
     backdrop-filter: blur(5px);
+    position: absolute;
+    top: 200px;
+    margin-bottom: 50px;
 }
 
 .input-deco-text {
