@@ -1,4 +1,4 @@
-import { auth, signInWithEmailAndPassword } from "./firebase.js";
+import { auth, signInWithEmailAndPassword, onAuthStateChanged } from "./firebase.js";
 
 document.getElementById('login-form').addEventListener('submit',  login)
 
@@ -12,11 +12,26 @@ async function login(event) {
         (userCredential) => {
             // Signed in
             const user = userCredential.user;
-            console.log(user);
         }
     ).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.error(errorCode, errorMessage);
     })
+}
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log(user)
+        user.getIdTokenResult().then((idTokenResult) => {
+            console.log(idTokenResult.claims.role)
+            console.log(user.displayName)
+        })
+    } else {
+        console.log('no user')
+    }
+})
+
+async function signOut() {
+
 }
