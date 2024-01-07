@@ -56,11 +56,6 @@ async function checkPassword() {
     } else if (passwordConfirmation !== password) {
         passwordError.innerHTML = "Passwords do not match.";
     } else {
-
-        if (document.getElementById("password-check-btn").style.display == "flex") {
-            document.getElementById("password-check-btn").style.display = "none";
-        }
-
         passwordError.style.color = "green";
         passwordError.innerHTML = "Password passes all tests.";
         document.getElementById("signup-btn").style.height = "auto";
