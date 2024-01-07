@@ -2,8 +2,3 @@
 .netlify
 .env
 node_modules
-
-# firebase.js simply initializes firebase app, imports necessary SDKs, and exports them for use in other js files,
-# alongside exporting the initialized auth.
-# hidden for security reasons.
-firebase.js
