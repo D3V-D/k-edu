@@ -32,7 +32,10 @@ document.getElementById("forgot-password-form").addEventListener("submit", async
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode, errorMessage)
-                alert(errorMessage)
+
+                const passwordError = document.getElementById("password-error");
+                passwordError.style.color = "red";
+                passwordError.innerHTML = errorMessage;
             })
     }
 })
