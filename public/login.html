@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://identitytoolkit.googleapis.com; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://www.gstatic.com;"/>
+        content="default-src 'self' https://*.googleapis.com; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://www.gstatic.com;"/>
         <title>Login to K-Edu</title>
 
         <link href="css/login.css" rel="stylesheet">
@@ -25,6 +25,11 @@
             <h2>Unfortunately, you can't login to K-Edu without javascript on.</h2>
         </noscript>
 
+        <div id="loading">
+            <img id="loader" src="assets/imgs/bouncing-loader.svg">
+            Loading...
+        </div>
+
         <a href="../">
             <img src="assets/imgs/favicon_io/android-chrome-512x512.png" id="home-link-img" alt="k-edu logo">
         </a>
@@ -35,13 +40,22 @@
                 <h1 id="welcome">Login to K-Edu</h1>
             </div>
 
+            <h3 class="incorrect" id="wrong">
+                Incorrect email or password.
+            </h3>
+
+            <h3 class="incorrect" id="too-many-requests">
+                Access to the account has been temporarily disabled due to many failed login attempts.
+                You can restore now by resetting password, or try again later.
+            </h3>
+
             <form id="login-form">
                 <div class="input-container">
-                    <input class="input-box" type="email" id="email" placeholder="">
+                    <input required class="input-box" type="email" id="email" placeholder="">
                     <label for="email" class="input-label">Email</label>
                 </div>
                 <div class="input-container">
-                    <input class="input-box" type="password" id="password" placeholder="">
+                    <input required class="input-box" type="password" id="password" placeholder="">
                     <label for="password" class="input-label">Password</label>
                 </div>
                 <div class="row">

@@ -38,10 +38,32 @@ noscript {
     height: 100vh;
     z-index: 999999;
     background-color: white;
+    color: black;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+#loading {
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(0.9rem, 1vw, 2rem);
+    color: black;
+}
+
+#loader {
+    width: 20%;
 }
 
 #home-link-img {
@@ -212,4 +234,9 @@ h1 {
     background-color: rgb(139, 255, 139);
     font-size: 1.2rem;
     font-weight: 600;
+}
+
+.incorrect {
+    color: red;
+    display: none;
 }

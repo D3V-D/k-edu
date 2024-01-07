@@ -30,6 +30,7 @@ async function initialAnimation() {
     document.getElementById("email-container").style.display = "none";
     document.getElementById("password-prompt").style.display = "none";
     document.getElementById("password-container").style.display = "none";
+    document.getElementById("password-confirm-container").style.display = "none";
 
     document.querySelectorAll(".continue-btn").forEach(btn => {
         btn.style.display = "none";
@@ -103,10 +104,12 @@ async function revealPasswordPrompt() {
     if (window.getComputedStyle(document.getElementById("password-prompt")).getPropertyValue("display") == "none") {
         const prompt = document.getElementById("password-prompt");
         const passwordContainer = document.getElementById("password-container");
+        const passwordConfirmContainer = document.getElementById("password-confirm-container");
 
         document.getElementById("email-continue-btn").style.display = "none";
         await typeWriter(prompt);
         passwordContainer.style.display = "flex";
+        passwordConfirmContainer.style.display = "flex";
         document.getElementById("password-check-btn").style.display = "flex";
         document.getElementById('password').focus()
     }
@@ -125,6 +128,7 @@ document.getElementById("password").addEventListener("keydown", handlePasswordKe
 
 async function checkPassword() {
     let password = document.getElementById("password").value;
+    let passwordConfirmation = document.getElementById("password-confirm").value;
     const passwordError = document.getElementById("password-error");
 
     passwordError.style.color = "red";
@@ -140,6 +144,8 @@ async function checkPassword() {
         passwordError.innerHTML = "Password must have at least 1 number.";
     } else if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
         passwordError.innerHTML = "Password must have at least 1 special character.";
+    } else if (passwordConfirmation !== password) {
+        passwordError.innerHTML = "Passwords do not match.";
     } else {
 
         if (document.getElementById("password-check-btn").style.display == "flex") {

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self' https://*.googleapis.com; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://www.gstatic.com;"/>
+        <title>Teacher Dashboard</title>
+
+        <link href="css/teacher.css" rel="stylesheet">
+
+        <link rel="preconnect" href="https://fonts.gstatic.com"/>
+
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/imgs/favicon_io/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/imgs/favicon_io/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/imgs/favicon_io/favicon-16x16.png">
+        <link rel="manifest" href="assets/imgs/favicon_io/site.webmanifest">
+    </head>
+    <body>
+
+        <div id="loading">
+            <img id="loader" src="assets/imgs/bouncing-loader.svg">
+            Loading...
+        </div>
+
+        <h1>
+            Welcome, Teacher.
+        </h1>
+        <button id="sign-out">
+            Sign Out
+        </button>
+
+        <script type="module" src="js/teacher.js"></script>
+        <script src="js/lesson-creation.js"></script>
+    </body>
+</html>

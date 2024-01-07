@@ -1,3 +1,28 @@
+import { auth, onAuthStateChanged } from "./firebase.js";
+import { getUserRole } from "./userRoles.js";
+
+// redirect if logged in already
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        let role = getUserRole(user.uid).then((data)=>{
+            if (data.role == 'teacher') {
+                window.location = "../teacher"
+            } else if (data.role == 'student') {
+                window.location = "../student"
+            }
+        })
+    } else {
+        document.getElementById("loading").style.display = "none";
+    }
+})
+
+// in case of back button (doesn't auto reload the page)
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+})
+
 document.getElementById("signup-form").addEventListener("submit", signup);
 
 async function signup(event) {
@@ -38,12 +63,21 @@ function createNewUser(inputName, inputEmail, inputPassword, inputAccountType) {
         .then((response) => response.json())
         .then((data) => {
             console.log(data); // Handle the response data here
+            
+            const passwordError = document.getElementById("password-error");
+            
+            if (data.error) {
+                passwordError.style.color = "red";
+                passwordError.innerHTML = data.error
+            }
+
             if (data.error == "The email address is already in use by another account.") {
                 alert("The email address is already in use by another account.")
+                passwordError.innerHTML = "The email address is already in use by another account."
             }
 
             if (!data.error) {
-                alert("User created successfully. Redirecting...")
+                passwordError.style.color = "green";
                 window.location.href = "../login"
             }
         })
