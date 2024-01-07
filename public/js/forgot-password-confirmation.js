@@ -58,8 +58,6 @@ async function checkPassword() {
     } else {
         passwordError.style.color = "green";
         passwordError.innerHTML = "Password passes all tests.";
-        document.getElementById("signup-btn").style.height = "auto";
-        document.getElementById("signup-btn").style.opacity = "1";
         return "passed";
     }
 }
