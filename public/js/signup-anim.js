@@ -158,8 +158,6 @@ async function checkPassword() {
         document.getElementById("signup-btn").style.opacity = "1";
         return "passed";
     }
-
-
 }
 
 document.getElementById("password-check-btn").addEventListener("click", checkPassword);
