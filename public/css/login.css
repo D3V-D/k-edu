@@ -7,7 +7,7 @@
 }
 
 html, body {
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 body {
@@ -29,7 +29,7 @@ canvas {
     background-color: whitesmoke;
     background-image: linear-gradient(135deg, #44caff 10%, #45e081 100%);
     cursor: pointer;
-    filter: blur(46px) saturate(1.2);
+    filter: blur(46px) saturate(1.3);
 }  
 
 noscript {
@@ -62,6 +62,7 @@ h1 {
 }
 
 .row {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -151,13 +152,44 @@ h1 {
 }
 
 #signup {
-    color: rgb(17, 138, 194);
+    color: #118ac2;
     font-weight: 800;
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+    position: absolute;
+    filter: brightness(0) saturate(100%) invert(46%) sepia(73%) saturate(829%) hue-rotate(159deg) brightness(86%) contrast(88%); 
+    left: calc(100% - 90px);
+    border-bottom: solid 1px transparent;
+    transition: border 0.3s ease;
+}
+
+#signup:hover {
+    border-bottom: solid 1px #118ac2;
+}
+
+.stem {
+    width: 2px;
+    height: 2px;
+    margin-right: -2px;
+    margin-left: 4px;
+    background-color: white;
+    transition: width 0.4s ease;
+}
+
+#signup:hover > .stem {
+    width: 10px;
 }
 
 #forgot-password {
     color: black;
     text-decoration: none;
+    border-bottom: solid 1px transparent;
+    transition: border-bottom 0.4s ease;
+}
+
+#forgot-password:hover {
+    border-bottom: solid 1px #111;
 }
 
 #login-btn {
@@ -172,6 +204,7 @@ h1 {
     height: 3rem;
     font-size: 1rem;
     border: solid 1px #111;
+    color: black;
     transition: 0.4s ease;
 }
 

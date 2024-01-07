@@ -6,6 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>404 Error</title>
 
+        <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self'; child-src 'none'; style-src 'self' 'unsafe-inline';" />
+
         <style>
             html, body {
                 overflow: hidden;
@@ -128,13 +132,6 @@
             </noscript>
         </h3>
 
-        <script>
-            let currentDomain = window.location.origin;
-            document.getElementById("home-link").href = currentDomain
-
-            document.getElementById("star-image").src = currentDomain + "/assets/icons/star-solid.svg"
-
-            document.body.style.backgroundImage = "url('" + currentDomain + "/assets/imgs/space.jpg')";
-        </script>
+        <script src="js/404.js"></script>
     </body>
 </html>

@@ -26,7 +26,7 @@ export async function handler(event, context) {
     
     // Access request body parameters sent from the frontend
     const { displayName, email, password, accountType } = JSON.parse(event.body);
-
+    console.log(context.auth)
     // Create user using Firebase Admin SDK
     const userRecord = await admin.auth().createUser({
       email: email,

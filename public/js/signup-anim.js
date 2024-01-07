@@ -54,6 +54,8 @@ async function handleNameKeyDown(e) {
     }
 }
 
+document.getElementById("name").addEventListener("keydown", handleNameKeyDown);
+
 async function revealRolePrompt() {
     if (window.getComputedStyle(document.getElementById("role-prompt")).getPropertyValue("display") == "none") {
         const prompt = document.getElementById("role-prompt");
@@ -67,6 +69,7 @@ async function revealRolePrompt() {
     }
 }
 
+document.getElementById("name-continue-btn").addEventListener("click", revealRolePrompt);
 
 /** role to email prompt */
 async function revealEmailPrompt() {
@@ -83,6 +86,8 @@ async function revealEmailPrompt() {
     }
 }
 
+document.getElementById("role-continue-btn").addEventListener("click", revealEmailPrompt);
+
 
 /** email to password prompt */
 async function handleEmailKeyDown(e) {
@@ -91,6 +96,8 @@ async function handleEmailKeyDown(e) {
         await revealPasswordPrompt();
     }
 }
+
+document.getElementById("email").addEventListener("keydown", handleEmailKeyDown);
 
 async function revealPasswordPrompt() {
     if (window.getComputedStyle(document.getElementById("password-prompt")).getPropertyValue("display") == "none") {
@@ -105,12 +112,16 @@ async function revealPasswordPrompt() {
     }
 }
 
+document.getElementById("email-continue-btn").addEventListener("click", revealPasswordPrompt);
+
 /** make sure password is secure */
 async function handlePasswordKeyDown(e) {
     if (e.key == "Enter") {
         e.preventDefault();
     }
 }
+
+document.getElementById("password").addEventListener("keydown", handlePasswordKeyDown);
 
 async function checkPassword() {
     let password = document.getElementById("password").value;
@@ -144,6 +155,8 @@ async function checkPassword() {
 
 
 }
+
+document.getElementById("password-check-btn").addEventListener("click", checkPassword);
 
 /** helper functions */
 async function typeWriter(element) {

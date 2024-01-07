@@ -61,8 +61,7 @@ class Circle {
 let circles = [];
 function init() {
     // setting up canvas
-    document.body.innerHTML += "<canvas id='canvas'></canvas>";
-    canvas = this.document.getElementById("canvas");
+    canvas = document.getElementById("canvas");
     c = canvas.getContext("2d");
     this.resetCanvas();
     animation();
@@ -92,7 +91,7 @@ function randomNumber(max = 1, min = 0, forbidden = []) {
     return res;
 }
 // ## event handlers
-window.addEventListener("load", this.init());
+window.addEventListener("load", init);
 window.addEventListener("resize", resetCanvas);
 window.addEventListener("mousemove", function (e) {
     mouse.x = e.clientX;
