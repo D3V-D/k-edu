@@ -38,7 +38,7 @@ window.addEventListener('pageshow', function (event) {
     }
 })
 
-document.getElementById("sign-out").addEventListener("click", signout);
+document.getElementById("logout").addEventListener("click", signout);
 
 async function signout() {
     signOut(auth).then(() => {
@@ -49,3 +49,24 @@ async function signout() {
     })
 }
 
+
+/** visual effects */
+document.getElementById("profile").addEventListener("click", () => {
+    const profileDropdown = document.getElementById("profile-dropdown");
+
+    if (profileDropdown.style.display === "flex") {
+        profileDropdown.style.display = "none";
+    } else {
+        profileDropdown.style.display = "flex";
+    }
+})
+
+
+// if click outside, close
+window.onclick = function(event) {
+    const profileDropdown = document.getElementById("profile-dropdown");
+    const profilePicture = document.getElementById("profile-img");
+    if (event.target !== profilePicture) {
+        profileDropdown.style.display = "none";
+    }
+}

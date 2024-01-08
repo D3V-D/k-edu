@@ -27,48 +27,54 @@
 
         <nav id="sidebar">
             <div id="link-holder">
-                <a href="#" title="Lesson Editor">Lesson Editor</a>
-                <a href="#" title="Grades">Grades</a>
+                <a href="#" title="Dashboard" alt="Dashboard" class="current-page"><img src="assets/imgs/teacher/dashboard (dark).svg"></a>
+                <a href="#" title="Lesson Editor" alt="Lesson Editor"><img src="assets/imgs/teacher/write-lesson.svg"></a>
+                <a href="#" title="Grades" alt="Grades"><img src="assets/imgs/teacher/grades.svg"></a>
+                <a href="#" title="Announcements" alt="Announcements"><img src="assets/imgs/teacher/loudspeaker.svg"></a>
             </div>
-            <a href="#" id="help" title="Help">
-                ?
-            </a>
         </nav>
 
         <main id="content">
             <div id="top-bar" class="row">
                 <input title="Search" type="search" id="search" placeholder="Search">
                 <div id="profile" title="Profile">
-                    profile
+                    <img id="profile-img" alt="Profile Picture" src="assets/imgs/profile.svg">
+                    <div id="profile-dropdown">
+                        <div class="profile-dropdown-section">
+                            <a href="#" title="Settings" class="profile-dropdown-option">Settings</a>
+                            <a href="#" title="Themes" class="profile-dropdown-option">Themes</a>
+                        </div>
+                        <span class="divider"></span>
+                        <div class="profile-dropdown-section">
+                            <a href="#" title="Help" class="profile-dropdown-option">Help</a>
+                            <a href="mailto:k-edu@googlegroups.com" title="Contact" class="profile-dropdown-option">Contact</a>
+                            <a id="logout" title="Logout" class="profile-dropdown-option">Logout</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" id="title-holder">
                 <h1 id="welcome">
                     Welcome, Teacher.
                 </h1>
             </div>
 
-            <h2 class="section-header" title="See All Classes">Classes <div class="stem"></div><img src="assets/icons/arrow-right-solid.svg"></h2>
-            <div class="row scroll-x" id="classes">
+            <h2 class="section-header" title="See All Classes">Classes <div class="stem"></div></h2>
+            <div class="row tray-row scroll-x" id="classes">
                 <button id="add-class" title="Add Class">
                     +
                 </button>
             </div>
 
-            <h2 class="section-header" title="See All Messages">Messages <div class="stem"></div><img src="assets/icons/arrow-right-solid.svg"></h2>
-            <div class="row scroll-x" id="messages">
+            <h2 class="section-header" title="See All Messages">Messages <div class="stem"></div></h2>
+            <div class="row tray-row scroll-x" id="messages">
                 <div title="Click to Expand" class="message">
                     <h3 class="message-sender">John Doe</h3>
                     <p class="message-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     <p class="message-timestamp">12-12-2022 12:12 AM</p>
                 </div>
             </div>
-
-                
-            <button id="sign-out" title="Sign Out">
-                Sign Out
-            </button>
         </main>
 
         
