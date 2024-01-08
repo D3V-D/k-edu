@@ -9,6 +9,8 @@
         content="default-src 'self' https://*.googleapis.com; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://www.gstatic.com;"/>
         <title>Student Dashboard</title>
 
+        <link href="css/template/noscript.css" rel="stylesheet">
+        <link href="css/template/loader.css" rel="stylesheet">
         <link href="css/student.css" rel="stylesheet">
 
         <link rel="preconnect" href="https://fonts.gstatic.com"/>
@@ -24,6 +26,10 @@
             <img id="loader" src="assets/imgs/bouncing-loader.svg">
             Loading...
         </div>
+
+        <noscript>
+            <h1>You have javascript disabled, or your browser does not support it.</h1>
+        </noscript>
 
         <h1>
             Welcome, Student.
