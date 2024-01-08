@@ -141,7 +141,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding-block: 5vh;
+    padding-block: clamp(20px, 2vh, 40px);
     height: 100vh;
     padding-right: 25px;
     align-items: center;
@@ -255,7 +255,7 @@ body {
 
 .message-text {
     height: 100%;
-    overflow: scroll;
+    overflow: hidden;
     margin: 2px;
 }
 
@@ -272,7 +272,7 @@ body {
     font-family: 'Urbanist', sans-serif;
     height: 50px;
     width: 100%;
-    max-width: 40vw;
+    max-width: 60vw;
     font-size: clamp(12px, 5vw, 20px);
     padding: 5px;
     padding-left: 30px;
