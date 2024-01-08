@@ -25,14 +25,54 @@
             Loading...
         </div>
 
-        <h1>
-            Welcome, Teacher.
-        </h1>
-        <button id="sign-out">
-            Sign Out
-        </button>
+        <nav id="sidebar">
+            <div id="link-holder">
+                <a href="#" title="Lesson Editor">Lesson Editor</a>
+                <a href="#" title="Grades">Grades</a>
+            </div>
+            <a href="#" id="help" title="Help">
+                ?
+            </a>
+        </nav>
+
+        <main id="content">
+            <div id="top-bar" class="row">
+                <input title="Search" type="search" id="search" placeholder="Search">
+                <div id="profile" title="Profile">
+                    profile
+                </div>
+            </div>
+
+            <div class="row">
+                <h1 id="welcome">
+                    Welcome, Teacher.
+                </h1>
+            </div>
+
+            <h2 class="section-header" title="See All Classes">Classes <div class="stem"></div><img src="assets/icons/arrow-right-solid.svg"></h2>
+            <div class="row scroll-x" id="classes">
+                <button id="add-class" title="Add Class">
+                    +
+                </button>
+            </div>
+
+            <h2 class="section-header" title="See All Messages">Messages <div class="stem"></div><img src="assets/icons/arrow-right-solid.svg"></h2>
+            <div class="row scroll-x" id="messages">
+                <div title="Click to Expand" class="message">
+                    <h3 class="message-sender">John Doe</h3>
+                    <p class="message-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <p class="message-timestamp">12-12-2022 12:12 AM</p>
+                </div>
+            </div>
+
+                
+            <button id="sign-out" title="Sign Out">
+                Sign Out
+            </button>
+        </main>
+
+        
 
         <script type="module" src="js/teacher.js"></script>
-        <script src="js/lesson-creation.js"></script>
     </body>
 </html>
