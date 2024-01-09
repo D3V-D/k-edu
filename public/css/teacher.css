@@ -342,6 +342,7 @@ body {
 }
 
 .class {
+    position: relative;
     display: flex;
     text-decoration: none;
     flex-direction: column;
@@ -407,6 +408,21 @@ body {
     transform: scale3d(1, 1, 1);
 }
 
+.class-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    margin: 5px;
+    right: 0;
+    padding: 2px;
+    width: calc(var(--square-side-length) / 5);
+    height: calc(var(--square-side-length) / 5);
+    border-radius: 5px;
+    background-color: #ff5f5f;
+    z-index: 5;
+}
 
 .message {
     position: relative;

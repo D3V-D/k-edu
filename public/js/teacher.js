@@ -101,28 +101,38 @@ document.getElementById("modal-close").addEventListener("click", () => {
 })
 
 async function deleteClass(classId) {
-    if (currentUser) {
-        const requestData = {
-            uid: currentUser.uid,
-            classId: classId
+    return new Promise((resolve, reject) => {
+        if (currentUser) {
+            const requestData = {
+                uid: currentUser.uid,
+                classId: classId
+            };
+
+            fetch('/.netlify/functions/deleteClass', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data.message);
+                resolve(data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                reject(error); // Reject the promise if an error occurs
+            });
+        } else {
+            reject(new Error('No currentUser')); // Reject if there's no currentUser
         }
-
-
-    fetch('/.netlify/functions/deleteClass', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data); // Handle the response data here
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
+    });
 }
 
 
@@ -176,11 +186,29 @@ async function getClasses() {
                     const link = document.createElement("a");
                     link.classList.add("class-link");
                     link.innerHTML = "View";
-                    link.href = "teacher/class/" + classId;                    
+                    link.href = "teacher/class/" + classId; 
+                    
+
+                    /** NOTE TO SELF: Move delete to class page, and 
+                     * make it less error-prone (make the confirm prompt
+                     * something like "Type the name of the class")
+                     */
+                    const deleteBtn = document.createElement("img");
+                    deleteBtn.classList.add("class-delete");
+                    deleteBtn.src = "assets/icons/delete (dark).svg";
+                    deleteBtn.addEventListener("click", async (e) => {
+                        e.preventDefault()
+                        const confirmDelete = confirm("Are you sure you want to delete this class? This action cannot be undone.");
+                        if (confirmDelete) {
+                            await deleteClass(classId);
+                            await getClasses();
+                        }
+                    })
 
                     classDiv.appendChild(classTitle);
                     classDiv.appendChild(classDescEl);
                     classDiv.appendChild(link);
+                    classDiv.appendChild(deleteBtn);
 
                     classesContainer.appendChild(classDiv);
                 }
