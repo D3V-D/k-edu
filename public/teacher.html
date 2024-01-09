@@ -30,6 +30,34 @@
             Loading...
         </div>
 
+        <div id="overlay">
+            <div id="modal">
+                <img id="modal-close" src="assets/icons/arrow-right-solid (dark).svg" alt="Close Modal">
+                <div id="modal-content">
+                    <h2 id="modal-title">
+                        Class Details
+                    </h2>
+                    <form id="add-class-form" autocomplete="off">
+                        <div class="input-container">
+                            <input required maxlength="30" value="" class="input-box" type="text" id="class-name-input" placeholder="The name of your new class">
+                            <label for="class-name-input" class="input-label">Class Name</label>
+                        </div>
+                        <div class="input-container">
+                            <input required maxlength="100" value="" class="input-box" type="text" id="class-desc-input" placeholder="Describe your new class">
+                            <label for="class-desc-input" class="input-label">Class Description</label>
+                        </div>
+                        <p id="modal-error">
+
+                        </p>
+                        <button id="add-class-btn" type="submit">Add Class</button>
+                    </form>
+                    <div id="modal-content-overlay">
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <nav id="sidebar">
             <div id="link-holder">
                 <a href="#" title="Dashboard" alt="Dashboard" class="current-page"><img src="assets/imgs/teacher/dashboard (dark).svg"></a>
@@ -68,7 +96,7 @@
             <h2 class="section-header" title="See All Classes">Classes <div class="stem"></div></h2>
             <div class="row tray-row scroll-x" id="classes">
                 <button id="add-class" title="Add Class">
-                    +
+                    <img src="assets/icons/plus-dark.svg">
                 </button>
             </div>
 

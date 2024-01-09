@@ -2,14 +2,16 @@ import { auth, onAuthStateChanged, signOut } from "./firebase.js";
 import { getUserRole } from "./userRoles.js";
 
 let currentUser;
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        let role = getUserRole(user.uid).then((data)=>{
+onAuthStateChanged(auth, async (user) => {
+    try {
+        if (user) {
+            currentUser = user
+            let data = await getUserRole(user.uid)
+
             if (data.role == 'teacher') {
-                document.getElementById("loading").style.display = "none";
-                
+            
                 // get phrase from time of day
-                let date = new Date();                
+                let date = new Date();
                 let hour = date.getHours();
                 let phrase;
                 if (hour < 12) {
@@ -21,16 +23,24 @@ onAuthStateChanged(auth, (user) => {
                 } else if (hour < 24) {
                     phrase = "Good Night"
                 }
-
+                try {
+                    await getClasses()
+                } catch (error) {
+                    console.error(error)
+                }
                 document.getElementById("welcome").innerHTML = phrase + ", " + user.displayName + "."
+                titleContainerSize()
+                document.getElementById("loading").style.display = "none";
             } else if (data.role == 'student') {
+                
                 window.location = "../student"
+            
             }
-        })
-        currentUser = user
-        getClasses()
-    } else {
-        window.location = "../login"
+        } else {
+            window.location = "../login"
+        }
+    } catch (error) {
+        console.error(error)
     }
 })
 
@@ -61,7 +71,7 @@ async function createClass(className, classDescription) {
             classDesc: classDescription
         }
 
-        fetch('/.netlify/functions/createClass', {
+        await fetch('/.netlify/functions/createClass', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -70,13 +80,25 @@ async function createClass(className, classDescription) {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data); // Handle the response data here
+                document.getElementById("overlay").style.display = "flex"
+                document.getElementById("modal-content-overlay").style.display = "flex"
+                document.getElementById("modal-content-overlay").innerHTML = data.message || data.error   
             })
             .catch((error) => {
+                document.getElementById("overlay").style.display = "flex"
+                document.getElementById("modal-content-overlay").style.display = "flex"
+                document.getElementById("modal-content-overlay").innerHTML = error
+                document.getElementById("modal-content-overlay").style.color = 'red';
                 console.error('Error:', error);
             });
     }
 }
+
+document.getElementById("modal-close").addEventListener("click", () => {
+    document.getElementById("modal-content-overlay").style.display = "none";
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('add-class-form').reset();
+})
 
 async function deleteClass(classId) {
     if (currentUser) {
@@ -103,56 +125,96 @@ async function deleteClass(classId) {
     }
 }
 
+
+let classesContainerInitialContent = document.getElementById("classes").innerHTML
 async function getClasses() {
-    if (currentUser) {
-        const requestData = {
-            uid: currentUser.uid
-        }
+    return new Promise((resolve, reject) => {
+        if (currentUser) {
+            const requestData = {
+                uid: currentUser.uid
+            };
 
-        fetch('/.netlify/functions/getClasses', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then((response) => response.json())
+            fetch('/.netlify/functions/getClasses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then((data) => {
+                const classesContainer = document.getElementById("classes");
+                classesContainer.innerHTML = classesContainerInitialContent
+
+                document.getElementById("add-class").addEventListener("click", () => {
+                    document.getElementById('overlay').style.display = 'flex';
+                    document.getElementById("modal-content-overlay").style.display = "none"
+                });      
+                
                 for (let i = 0; i < data.length; i++) {
-                    const class_name = data[i].className;
-                    const class_desc = data[i].classDesc;
-                    const class_id = data[i].classId;
+                    const { className, classDesc, classId } = data[i];
 
-                    let classesContainer = document.getElementById("classes");
-                    
-                    let classDiv = document.createElement("div");
+                    const classDiv = document.createElement("a");
+                    classDiv.setAttribute("data-id", classId);
                     classDiv.classList.add("class");
-                    classDiv.title = class_name;
+                    classDiv.href = "teacher/class/" + classId;
+                    classDiv.title = className;
 
-                    let classTitle = document.createElement("h3");
+                    const classTitle = document.createElement("h3");
                     classTitle.classList.add("class-title");
-                    classTitle.innerHTML = class_name;
+                    classTitle.innerHTML = className;
 
-                    let classDesc = document.createElement("p");
-                    classDesc.classList.add("class-desc");
-                    classDesc.innerHTML = class_desc;
+                    const classDescEl = document.createElement("p");
+                    classDescEl.classList.add("class-desc");
+                    classDescEl.innerHTML = classDesc;
 
-                    let link = document.createElement("a");
+                    const link = document.createElement("a");
                     link.classList.add("class-link");
                     link.innerHTML = "View";
-                    link.href = "teacher/class/" + class_id;
+                    link.href = "teacher/class/" + classId;                    
 
                     classDiv.appendChild(classTitle);
-                    classDiv.appendChild(classDesc);
+                    classDiv.appendChild(classDescEl);
                     classDiv.appendChild(link);
 
                     classesContainer.appendChild(classDiv);
                 }
+
+                resolve(data); // Resolve the Promise with the fetched data
             })
             .catch((error) => {
                 console.error('Error:', error);
+                reject(error); // Reject the Promise if an error occurs
             });
-    }
+        } else {
+            reject(new Error('No currentUser')); // Reject if there's no currentUser
+        }
+    });
+}
+
+document.getElementById("add-class").addEventListener("click", () => {
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById("modal-content-overlay").style.display = "none"
+});
+document.getElementById("add-class-form").addEventListener("submit", handleClassForm)
+
+async function handleClassForm(e) {
+    e.preventDefault();
+    const className = document.getElementById("class-name-input").value
+    const classDescription = document.getElementById("class-desc-input").value
+
+
+    document.getElementById("overlay").style.display = "flex"
+    document.getElementById("modal-content-overlay").style.display = "flex"
+    document.getElementById("modal-content-overlay").innerHTML = "Loading..."
+    await createClass(className, classDescription)
+    
+    await getClasses()
 }
 
 /** UX for mobile */
@@ -167,6 +229,7 @@ document.getElementById("profile").addEventListener("click", () => {
 })
 
 
+
 // if click outside, close
 window.onclick = function(event) {
     const profileDropdown = document.getElementById("profile-dropdown");
@@ -174,4 +237,13 @@ window.onclick = function(event) {
     if (event.target !== profilePicture) {
         profileDropdown.style.display = "none";
     }
+}
+
+window.addEventListener("resize", () => {
+    titleContainerSize()
+})
+
+function titleContainerSize() {
+    let titleHeight = document.getElementById("welcome").offsetHeight
+    document.getElementById("title-holder").style.minHeight = titleHeight + "px"
 }

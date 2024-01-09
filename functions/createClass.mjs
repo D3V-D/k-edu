@@ -25,7 +25,6 @@ export async function handler(event, context) {
 
         const { uid, className, classDesc } = JSON.parse(event.body);
 
-        console.log(uid, className)
         if (!uid || !className) {
             return {
                 statusCode: 400,
@@ -35,11 +34,13 @@ export async function handler(event, context) {
 
         const classesCollection = admin.firestore().collection('Classes');
 
+        const timestamp = admin.firestore.FieldValue.serverTimestamp();
         const newClassRef = await classesCollection.add({
             className: className,
             classDesc: classDesc || '',
             teacherId: uid,
             students: [],
+            createdAt: timestamp,
         })
 
         // now, add class to teacher's classes list
@@ -50,6 +51,14 @@ export async function handler(event, context) {
         if (teacherDoc.exists) {
             const teacherData = teacherDoc.data();
             currentClasses = teacherData.classes || [];
+        }
+
+        // check if teacher has too many classes
+        if (currentClasses.length >= 20) {
+            return {
+                statusCode: 403,
+                body: JSON.stringify({ error: 'Teacher has too many classes' }),
+            }
         }
 
         currentClasses.push(newClassRef.id);

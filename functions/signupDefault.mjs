@@ -48,7 +48,8 @@ export async function handler(event, context) {
     const userDocRef = admin.firestore().collection(collectionToAddTo).doc(uid);
 
     await userDocRef.set({
-      classes: []
+      classes: [],
+      name: displayName,
     })
 
     // Return success response if user creation is successful

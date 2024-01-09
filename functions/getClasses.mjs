@@ -42,19 +42,23 @@ export async function handler(event, context) {
             };
         }
 
-
-        const classes = teachersClasses.docs.map((doc) => doc.data());
+        // make an array
+        let classes = teachersClasses.docs.map((doc) => doc.data());
 
         // include classId 
         for (let i = 0; i < classes.length; i++) {
             classes[i].classId = teachersClasses.docs[i].id
         }
 
+        // order classes by createdAt (newest first)
+        classes.sort((a, b) => b.createdAt - a.createdAt);
+
         return {
             statusCode: 200,
             body: JSON.stringify(classes),
         };
     } catch (error) {
+        console.error(error);
         // Return error response if user creation fails
         return {
             statusCode: 500,
