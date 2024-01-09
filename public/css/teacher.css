@@ -87,7 +87,7 @@ body {
     height: 100%;
     flex-direction: column;
     align-items: center;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #link-holder > a {
@@ -125,7 +125,7 @@ body {
     padding-right: 25px;
     align-items: center;
     justify-content: flex-start;
-    overflow-y: scroll;
+    overflow-y: auto;
     gap: 1vh;
 }
 
@@ -148,7 +148,7 @@ body {
 
 
 .scroll-x {
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 #title-holder {
