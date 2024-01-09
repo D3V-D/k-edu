@@ -195,7 +195,11 @@ body {
     align-items: center;
     justify-content: center;
     width: var(--square-side-length);
-    aspect-ratio: 1/1;
+    min-width: var(--square-side-length);
+    max-width: var(--square-side-length);
+    height: var(--square-side-length);
+    min-height: var(--square-side-length);
+    max-height: var(--square-side-length);
     background-color: var(--bg-color);
     color: var(--fg-color);
     border: solid 1px var(--fg-color);
@@ -209,6 +213,71 @@ body {
     box-shadow: 0 0 1px var(--fg-color);
 }
 
+.class {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: var(--square-side-length);
+    min-width: var(--square-side-length);
+    max-width: var(--square-side-length);
+    height: var(--square-side-length);
+    min-height: var(--square-side-length);
+    max-height: var(--square-side-length);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    border: solid 1px var(--fg-color);
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.class-title {
+    text-align: center;
+    font-size: calc(var(--square-side-length) / 7.5);
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.class-desc {
+    text-align: left;
+    font-size: calc(var(--square-side-length) / 12.5);
+    width: 100%;
+    height: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.class-link {
+    position: relative;
+    text-decoration: none;
+    color: var(--fg-color);
+    width: 100%;
+    font-size: calc(var(--square-side-length) / 10);    
+}
+
+.class-link::before {
+    content: "";
+    position: absolute;
+    width: 4ch;
+    height: 1px;
+    background: var(--secondary-bg-color);
+    top: 100%;
+    left: 0;
+    pointer-events: none;
+    transform-origin: 100% 50%;
+    transform: scale3d(0, 1, 1);
+    transition: transform 0.3s;
+}
+
+.class-link:hover::before {
+    transform-origin: 0% 50%;
+    transform: scale3d(1, 1, 1);
+}
+
+
 .message {
     position: relative;
     display: flex;
@@ -216,6 +285,7 @@ body {
     justify-content: flex-start;
     min-width: var(--square-side-length);
     width: var(--square-side-length);
+    min-height: var(--square-side-length);
     height: var(--square-side-length);
     background-color: var(--bg-color);
     color: var(--fg-color);

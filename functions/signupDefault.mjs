@@ -1,5 +1,6 @@
 // Import Firebase Admin SDK
 import admin, { app } from 'firebase-admin';
+
 require ('dotenv').config();
 
 const serviceAccount = {
@@ -41,6 +42,14 @@ export async function handler(event, context) {
 
     const userRec = await admin.auth().getUser(uid);
     const { role } = userRec.customClaims
+
+    // now, add user to firestore
+    const collectionToAddTo = accountType == 'teacher' ? 'Teachers' : 'Students';
+    const userDocRef = admin.firestore().collection(collectionToAddTo).doc(uid);
+
+    await userDocRef.set({
+      classes: []
+    })
 
     // Return success response if user creation is successful
     return {
