@@ -127,6 +127,7 @@ async function getClasses() {
                     
                     let classDiv = document.createElement("div");
                     classDiv.classList.add("class");
+                    classDiv.title = class_name;
 
                     let classTitle = document.createElement("h3");
                     classTitle.classList.add("class-title");
