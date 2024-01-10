@@ -155,16 +155,14 @@ function showCorrectEditor() {
         document.getElementById("markdown-editor").style.display = "none";
         document.getElementById("pdf-viewer").style.display = "flex";
         updatePDFViewer()
-    } else {
-        document.getElementById("pdf-url").value = "";
-        document.getElementById("pdf-url").disabled = true;
     }
-
-
+    
     if (lessonFormat === "markdown") {
         // show markdown editor
         document.getElementById("pdf-viewer").style.display = "none";
         document.getElementById("markdown-editor").style.display = "flex";
+        document.getElementById("pdf-url").value = "";
+        document.getElementById("pdf-url").disabled = true;
     }
 }
 
