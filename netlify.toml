@@ -25,6 +25,11 @@
     status = 200
 
 [[redirects]]
+    from = "/teacher/lesson-editor"
+    to = "/teacher/lesson-editor.html"
+    status = 200
+
+[[redirects]]
     from = "/student"
     to = "/student.html"
     status = 200
@@ -40,7 +45,7 @@
     status = 200
 
 [[redirects]]
-    from = "/*"
+    from = "/*.html"
     to = "/404.html"
     status = 404
 

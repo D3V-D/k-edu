@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self' https://*.googleapis.com; object-src 'self' https://*; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://www.gstatic.com;"/>
+        <title>Teacher Dashboard</title>
+
+        <link href="../css/template/teacher-template.css" rel="stylesheet">    
+        <link href="../css/template/scrollbars.css" rel="stylesheet">
+        <link href="../css/template/noscript.css" rel="stylesheet">
+        <link href="../css/template/loader.css" rel="stylesheet">
+        <link href="../css/lesson-editor.css" rel="stylesheet">
+
+        <link rel="preconnect" href="https://fonts.gstatic.com"/>
+
+        <link rel="apple-touch-icon" sizes="180x180" href="../assets/imgs/favicon_io/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../assets/imgs/favicon_io/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../assets/imgs/favicon_io/favicon-16x16.png">
+        <link rel="manifest" href="../assets/imgs/favicon_io/site.webmanifest">
+    </head>
+    <body>
+        <noscript>
+            <h1>You have javascript disabled, or your browser does not support it.</h1>
+        </noscript>
+
+        <div id="loading">
+            <img id="loader" src="../assets/imgs/bouncing-loader.svg">
+            Loading...
+        </div>
+
+        <nav id="sidebar">
+            <div id="link-holder">
+                <a href="../teacher" title="Dashboard" alt="Dashboard"><img src="../assets/imgs/teacher/dashboard.svg"></a>
+                <a href="#" title="Lesson Editor" alt="Lesson Editor" class="current-page"><img src="../assets/imgs/teacher/write-lesson (dark).svg"></a>
+                <a href="#" title="Grades" alt="Grades"><img src="../assets/imgs/teacher/grades.svg"></a>
+                <a href="#" title="Announcements" alt="Announcements"><img src="../assets/imgs/teacher/loudspeaker.svg"></a>
+            </div>
+        </nav>
+
+        <main id="lesson-editor">
+            <div id="start">
+                <div class="start-option" title="Create a New Lesson" id="create-new">
+                    Create a New Lesson
+                </div>
+                <span id="or">
+                    or
+                </span>
+                <div class="start-option" title="Edit an Existing Lesson" id="edit-lesson">
+                    Edit an Existing Lesson
+                </div>
+            </div>
+
+            <div id="create">
+                <div id="top-bar" class="row">
+                    <h1 id="title">
+                        Create Lesson
+                    </h1>
+                    <div id="profile" title="Profile">
+                        <img id="profile-img" alt="Profile Picture" src="../assets/imgs/profile.svg">
+                        <div id="profile-dropdown">
+                            <div class="profile-dropdown-section">
+                                <a href="#" title="Settings" class="profile-dropdown-option">Settings</a>
+                                <a href="#" title="Themes" class="profile-dropdown-option">Themes</a>
+                            </div>
+                            <span class="divider"></span>
+                            <div class="profile-dropdown-section">
+                                <a href="#" title="Help" class="profile-dropdown-option">Help</a>
+                                <a href="mailto:k-edu@googlegroups.com" title="Contact" class="profile-dropdown-option">Contact</a>
+                                <a id="logout" title="Logout" class="profile-dropdown-option">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <form id="create-form">
+                    <div class="input-container">
+                        <label id="lesson-name-label" for="lesson-name">Lesson Name (0/50)</label>
+                        <input title="Lesson Name" required maxlength="50" name="lesson-name" value="" class="text-box" type="text" id="lesson-name" placeholder="The name of your new lesson">
+                    </div>
+                    <div class="input-container">
+                        <label id="lesson-type-label" for="lesson-type">Lesson Type</label>
+                        <select title="Lesson Type" class="select-input" required id="lesson-type" name="lesson-type">
+                            <option value="info">Informative Lesson</option>
+                            <option value="quiz">Quiz or Test</option>
+                            <option value="project">Project</option>
+                        </select>
+                    </div>
+                    <div class="input-container inline-input">
+                        <span>Editor settings:</span>
+                        <div class="checkbox-holder">
+                            <label id="editor-html-label" for="html">HTML</label>
+                            <input title="Enable HTML (only for projects)" type="checkbox" id="html" name="html">
+                            <label id="editor-css-label" for="css">CSS</label>
+                            <input title="Enable CSS (only for projects)" type="checkbox" id="css" name="css">
+                            <label id="editor-js-label" for="js">Javascript</label>
+                            <input title="Enable Javascript (only for projects)" type="checkbox" id="js" name="js">
+                        </div>
+                    </div>
+                    <div class="input-container">
+                        <label id="lesson-points-label" for="lesson-points">Total Points</label>
+                        <input title="Maximum points for this lesson" required min="0" max="100" value="0" name="lesson-points" class="number-input" type="number" id="lesson-points" placeholder="Max. Points">
+                    </div>
+                    <div class="input-container">
+                        <label id="due-date-label" for="due-date">Due Date (Leave unselected for no due date)</label>
+                        <input title="Due Date" type="date" class="date-input" id="due-date" name="due-date">
+                        <input title="Due Time (Select Due Date to enable)" type="time" class="date-input" id="due-time" name="due-time">
+                    </div>
+                    <div class="input-container inline-input">
+                        <label id="lock-label" for="lock">Lock Lesson?</label>
+                        <input title="Lock Lesson" type="checkbox" id="lock" name="lock">
+                    </div>
+                    <div class="input-container">
+                        <label id="unlock-date-label" for="unlock-date">Unlock Date (Leave unselected to keep locked)</label>
+                        <input title="Unlock Date (only if locked)" type="date" class="date-input" id="unlock-date" name="unlock-date">
+                        <input title="Unlock Time (Select unlock date to enable)" type="time" class="date-input" id="unlock-time" name="unlock-time">
+                    </div>
+                    <div class="input-container inline-input">
+                        <label id="lesson-format-label" for="lesson-format">Create lesson using:</label>
+                        <select  title="Select format to create lesson with" class="select-input" required id="lesson-format" name="lesson-format">
+                            <option value="markdown">Markdown</option>
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+                    <div class="input-container">
+                        <label id="pdf-url-label" for="pdf-url">PDF URL</label>
+                        <input type="url" title="A valid https:// URL of a PDF." id="pdf-url" name="pdf-url" pattern="^https:\/\/[^\/]+\.[^\/]+\/.+\.pdf.*$" placeholder="Enter a https:// url">
+                    </div>
+
+                    <div id="pdf-viewer">
+                        <object id="pdf" data="" type="application/pdf" width="100%" height="600px">
+                            <p>Unable to display PDF file. Make sure there is a valid url first, or <a id="download-pdf-link" href="">download</a> instead.</p>
+                        </object>
+                    </div>
+                    <div id="markdown-editor">
+                    
+                    </div>
+                </form>
+            </div>
+
+            <div id="edit">
+                
+            </div>
+        </main>
+
+        <script type="module" src="../js/lesson-editor.js"></script>
+    </body>
+</html>
