@@ -1,4 +1,4 @@
-import { auth, onAuthStateChanged, signOut } from "./firebase.js";
+import { auth, onAuthStateChanged, signOut } from "./supabase.js";
 import { getUserRole } from "./userRoles.js";
 
 let currentUser;

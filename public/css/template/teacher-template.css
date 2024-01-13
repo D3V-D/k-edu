@@ -6,7 +6,7 @@
     --bg-color: #fff;
     --secondary-bg-color: rgb(8, 192, 146);    
     /** CONSTANTS **/
-    --square-side-length: clamp(150px, 15vw, 200px);
+    --square-side-length: clamp(110px, 15vw, 200px);
 }
 
 * {

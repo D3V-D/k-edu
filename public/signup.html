@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://*.googleapis.com; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self' https://www.gstatic.com" />
+        content="default-src 'self' https://*.supabase.co; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/" />
         <title>Sign Up for K-Edu</title>
 
         <link href="css/template/noscript.css" rel="stylesheet">
@@ -91,17 +91,17 @@
                 <span class="input-deco-text">var password =&nbsp;</span>
                 <input required type="password" id="password" placeholder="_">
                 <span class="input-deco-text">;</span>
-            </div>
-            <div class="input-container" id="password-confirm-container">
-                <span class="input-deco-text">var passwordConfirmation =&nbsp;</span>
-                <input required type="password" id="password-confirm" placeholder="_">
-                <span class="input-deco-text">;</span>
+                <img class="eye" src="assets/icons/eye-slash-regular.svg" aria-hidden="true" id="eye" class="slashed">
             </div>
 
-            <span id="password-error"></span>
-            <a id="password-check-btn" class="continue-btn">
-                Check Password <div class="stem"></div><img src="assets/icons/arrow-right-solid.svg" aria-hidden="true">
-            </a>
+            <span id="signup-error"></span>
+            <div id="signup-reqs">
+                <span class="unmet req" id="upper-req">Uppercase Letter</span>
+                <span class="unmet req" id="lower-req">Lowercase Letter</span>
+                <span class="unmet req" id="num-req">Number</span>
+                <span class="unmet req" id="symbol-req">Symbol</span>
+                <span class="unmet req" id="char-req">Minimum 8 Characters</span>
+            </div>
             <button id="signup-btn" type="submit">Sign up!</button>
         </form>
         

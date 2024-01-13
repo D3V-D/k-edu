@@ -1,99 +1,102 @@
-import { auth, onAuthStateChanged, signOut } from "./firebase.js";
-import { getUserRole } from "./userRoles.js";
+import { supabase } from "./supabase.js";
 
 let currentUser;
-onAuthStateChanged(auth, async (user) => {
-    try {
-        if (user) {
-            currentUser = user
-            let data = await getUserRole(user.uid)
+const subscription = supabase.auth.onAuthStateChange((event, session) => {
+    let userRole;
 
-            if (data.role == 'teacher') {
-            
-                // get phrase from time of day
-                let date = new Date();
-                let hour = date.getHours();
-                let phrase;
-                if (hour < 12) {
-                    phrase = "Good Morning"
-                } else if (hour < 16) {
-                    phrase = "Good Afternoon"
-                } else if (hour < 19) {
-                    phrase = "Good Evening"
-                } else if (hour < 24) {
-                    phrase = "Good Night"
-                }
-                try {
-                    await getClasses()
-                } catch (error) {
-                    console.error(error)
-                }
-                document.getElementById("welcome").innerHTML = phrase + ", " + user.displayName + "."
-                titleContainerSize()
-                document.getElementById("loading").style.display = "none";
-            } else if (data.role == 'student') {
-                
-                window.location = "../student"
-            
+    if (session != null) {
+        userRole = session.user.user_metadata.role
+    }
+    
+    if (event === 'INITIAL_SESSION') {
+        if (session == null || (userRole != 'teacher' && userRole != 'student')) {
+            window.location.href = "../login";
+        } else if (userRole == 'student') {
+            window.location.href = "../student";
+        } else if (userRole == 'teacher') {
+            // handle initial session
+            currentUser = session.user
+            let data = session.user.user_metadata
+
+            //get phrase from time of day
+            let date = new Date();
+            let hour = date.getHours();
+            let phrase;
+            if (hour < 12) {
+                phrase = "Good Morning"
+            } else if (hour < 16) {
+                phrase = "Good Afternoon"
+            } else if (hour < 19) {
+                phrase = "Good Evening"
+            } else if (hour < 24) {
+                phrase = "Good Night"
             }
-        } else {
+            document.getElementById("welcome").innerHTML = phrase + ", " + data.name + "."
+            titleContainerSize()
+            initPage()
+        }
+    } else if (event === 'SIGNED_IN') {
+        console.log("Signed in.")
+        currentUser = session.user
+    } else if (event === 'SIGNED_OUT') {
+        window.location.href = "../login";
+    } else if (event === 'USER_UPDATED') {
+        console.log("User updated")
+        currentUser = session.user
+        if (session.user.user_metadata.role == 'student') {
+            window.location = "../student"
+        } else if (session.user.user_metadata.role != 'student') {
             window.location = "../login"
         }
-    } catch (error) {
-        console.error(error)
     }
 })
 
-// in case of back button (doesn't auto reload the page)
-window.addEventListener('pageshow', function (event) {
-    if (event.persisted) {
-        window.location.reload();
-    }
-})
 
 document.getElementById("logout").addEventListener("click", signout);
 
 async function signout() {
-    signOut(auth).then(() => {
-        console.log('Sign out successful')
-    }).catch((error) => {
-        console.error(error)
-        alert(error)
-    })
+    const { error } = await supabase.auth.signOut();
 }
 
-/** Database logic **/
+// /** Database logic **/
 async function createClass(className, classDescription) {
-    if (currentUser) {
-        const requestData = {
-            uid: currentUser.uid,
-            className: className,
-            classDesc: classDescription
-        }
-
-        await fetch('/.netlify/functions/createClass', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                document.getElementById("overlay").style.display = "flex"
-                document.getElementById("modal-content-overlay").style.display = "flex"
-                document.getElementById("modal-content-overlay").innerHTML = data.message || data.error   
-            })
-            .catch((error) => {
-                document.getElementById("overlay").style.display = "flex"
-                document.getElementById("modal-content-overlay").style.display = "flex"
-                document.getElementById("modal-content-overlay").innerHTML = error
-                document.getElementById("modal-content-overlay").style.color = 'red';
-                console.error('Error:', error);
-            });
+    if (!currentUser) {
+        return
     }
+
+    const currClasses = await getClasses()
+    if (currClasses.length >= 15) {
+        document.getElementById("overlay").style.display = "flex"
+        document.getElementById("modal-content-overlay").style.display = "flex"
+        document.getElementById("modal-content-overlay").innerHTML = "You can only have up to 15 classes."
+        document.getElementById("modal-content-overlay").style.color = 'red';
+        return
+    }
+
+
+    const insertData = {
+        teacher_uid: currentUser.id,
+        class_name: className,
+        description: classDescription
+    }
+
+    const { error } = await supabase.from("classes").insert(insertData)
+   
+    if (error) {
+        document.getElementById("overlay").style.display = "flex"
+        document.getElementById("modal-content-overlay").style.display = "flex"
+        document.getElementById("modal-content-overlay").innerHTML = error
+        document.getElementById("modal-content-overlay").style.color = 'red';
+        console.error('Error:', error.code);
+        return
+    }
+
+    document.getElementById("overlay").style.display = "flex"
+    document.getElementById("modal-content-overlay").style.display = "flex"
+    document.getElementById("modal-content-overlay").innerHTML = "Class created."
 }
 
+// modal closer
 document.getElementById("modal-close").addEventListener("click", () => {
     document.getElementById("modal-content-overlay").style.display = "none";
     document.getElementById('overlay').style.display = 'none';
@@ -101,129 +104,114 @@ document.getElementById("modal-close").addEventListener("click", () => {
 })
 
 async function deleteClass(classId) {
-    return new Promise((resolve, reject) => {
-        if (currentUser) {
-            const requestData = {
-                uid: currentUser.uid,
-                classId: classId
-            };
-
-            fetch('/.netlify/functions/deleteClass', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData),
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log(data.message);
-                resolve(data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                reject(error); // Reject the promise if an error occurs
-            });
-        } else {
-            reject(new Error('No currentUser')); // Reject if there's no currentUser
-        }
-    });
+    const { error } = await supabase.from("classes").delete().eq("id", classId)
+    
+    if (error) {
+        console.error('Error:', error);
+        document.getElementById("overlay").style.display = "flex"
+        document.getElementById("modal-content-overlay").style.display = "flex"
+        document.getElementById("modal-content-overlay").innerHTML = error
+        document.getElementById("modal-content-overlay").style.color = 'red';
+        return
+    }
 }
 
+// initialize page.
+async function initPage() {
+    let classes = await getClasses()
+    for (let i = 0; i < classes.length; i++) { 
+        addClassToList(classes[i].class_name, classes[i].description, classes[i].id)
+    }
+    document.getElementById("loading").style.display = "none";
+}
 
-let classesContainerInitialContent = document.getElementById("classes").innerHTML
 async function getClasses() {
-    return new Promise((resolve, reject) => {
-        if (currentUser) {
-            const requestData = {
-                uid: currentUser.uid
-            };
+    const { data, error } = await supabase.from("classes")
+            .select("class_name, description, id")
+            .eq("teacher_uid", currentUser.id)
+            .order("updated_at", { ascending: true })
 
-            fetch('/.netlify/functions/getClasses', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData),
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                const classesContainer = document.getElementById("classes");
-                classesContainer.innerHTML = classesContainerInitialContent
-
-                document.getElementById("add-class").addEventListener("click", () => {
-                    document.getElementById('overlay').style.display = 'flex';
-                    document.getElementById("modal-content-overlay").style.display = "none"
-                });      
-                
-                for (let i = 0; i < data.length; i++) {
-                    const { className, classDesc, classId } = data[i];
-
-                    const classDiv = document.createElement("a");
-                    classDiv.setAttribute("data-id", classId);
-                    classDiv.classList.add("class");
-                    classDiv.href = "teacher/class/" + classId;
-                    classDiv.title = className;
-
-                    const classTitle = document.createElement("h3");
-                    classTitle.classList.add("class-title");
-                    classTitle.innerHTML = className;
-
-                    const classDescEl = document.createElement("p");
-                    classDescEl.classList.add("class-desc");
-                    classDescEl.innerHTML = classDesc;
-
-                    const link = document.createElement("a");
-                    link.classList.add("class-link");
-                    link.innerHTML = "View";
-                    link.href = "teacher/class/" + classId; 
-                    
-
-                    /** NOTE TO SELF: Move delete to class page, and 
-                     * make it less error-prone (make the confirm prompt
-                     * something like "Type the name of the class")
-                     */
-                    const deleteBtn = document.createElement("img");
-                    deleteBtn.classList.add("class-delete");
-                    deleteBtn.src = "assets/icons/delete (dark).svg";
-                    deleteBtn.addEventListener("click", async (e) => {
-                        e.preventDefault()
-                        const confirmDelete = confirm("Are you sure you want to delete this class? This action cannot be undone.");
-                        if (confirmDelete) {
-                            await deleteClass(classId);
-                            await getClasses();
-                        }
-                    })
-
-                    classDiv.appendChild(classTitle);
-                    classDiv.appendChild(classDescEl);
-                    classDiv.appendChild(link);
-                    classDiv.appendChild(deleteBtn);
-
-                    classesContainer.appendChild(classDiv);
-                }
-
-                resolve(data); // Resolve the Promise with the fetched data
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                reject(error); // Reject the Promise if an error occurs
-            });
-        } else {
-            reject(new Error('No currentUser')); // Reject if there's no currentUser
-        }
-    });
+    if (error) {
+        console.error(error)
+        return
+    }
+   
+    return data
 }
+
+// update page on class creation or deletion
+const classesInserted = supabase.channel("class-insert").on("postgres_changes", 
+    { 
+        event: "INSERT", 
+        schema: "public", 
+        table: "classes" 
+    }, (payload) => {
+        addClassToList(payload.new.class_name, payload.new.description, payload.new.id)
+    }
+).subscribe();
+
+const classesRemoved = supabase.channel("class-remove").on("postgres_changes", 
+    { 
+        event: "DELETE", 
+        schema: "public", 
+        table: "classes" 
+    }, (payload) => {
+        document.getElementById('' + payload.old.id).remove()
+    }
+).subscribe();
+
+
+function addClassToList(class_name, class_desc, class_id) {
+    const classesContainer = document.getElementById('classes')
+    const className = class_name;
+    const classDesc = class_desc;
+    const classId = class_id;
+
+    const classDiv = document.createElement("a");
+    classDiv.setAttribute("data-id", classId);
+    classDiv.id = classId;
+    classDiv.classList.add("class");
+    classDiv.href = "teacher/classes?c=" + classId;
+    classDiv.title = className;
+
+    const classTitle = document.createElement("h3");
+    classTitle.classList.add("class-title");
+    classTitle.innerHTML = className;
+
+    const classDescEl = document.createElement("p");
+    classDescEl.classList.add("class-desc");
+    classDescEl.innerHTML = classDesc;
+
+    const link = document.createElement("a");
+    link.classList.add("class-link");
+    link.innerHTML = "View";
+    link.href = "teacher/classes?c=" + classId;
+
+
+    /** NOTE TO SELF: Move delete to class page, and 
+     * make it less error-prone (make the confirm prompt
+     * something like "Type the name of the class")
+     */
+    const deleteBtn = document.createElement("img");
+    deleteBtn.classList.add("class-delete");
+    deleteBtn.src = "assets/icons/delete (dark).svg";
+    deleteBtn.addEventListener("click", async (e) => {
+        e.preventDefault()
+        const confirmDelete = confirm("Are you sure you want to delete this class? This action cannot be undone.");
+        if (confirmDelete) {
+            await deleteClass(classId);
+        }
+    })
+    deleteBtn.title = "Delete Class";
+
+    classDiv.appendChild(classTitle);
+    classDiv.appendChild(classDescEl);
+    classDiv.appendChild(link);
+    classDiv.appendChild(deleteBtn);
+
+    classesContainer.appendChild(classDiv);
+}
+
 
 document.getElementById("add-class").addEventListener("click", () => {
     document.getElementById('overlay').style.display = 'flex';
@@ -241,9 +229,68 @@ async function handleClassForm(e) {
     document.getElementById("modal-content-overlay").style.display = "flex"
     document.getElementById("modal-content-overlay").innerHTML = "Loading..."
     await createClass(className, classDescription)
-    
-    await getClasses()
 }
+
+// for searchbar
+document.getElementById("search").addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+        const query = document.getElementById("search").value
+        
+        if (query === "") {
+            return
+        }
+
+        // or = search for mult. keywords
+        // wrap words in "" to search for items with same order of words
+        // to exclude keywords from search, use - in front of the keyword
+        const { data, classError } = await supabase.from("classes")
+            .select(
+                `id, 
+                class_name, 
+                description
+               `
+            )
+            .textSearch('name_description', query, {
+                type: 'websearch',
+                config: 'english'
+            })
+        
+        if (classError) {
+            console.error(classError)
+            document.getElementById("search-results").innerText = "Error encountered in search:" + classError
+            return
+        }
+
+        if (data.length === 0) {
+            document.getElementById("search-results").innerText = "No results found."
+            return
+        }
+
+        document.getElementById("search-results").innerHTML = "<span style='margin-bottom: 5px;'>Found " + data.length + " results</span>"
+        for (let i = 0; i < data.length; i++) {            
+            const link = document.createElement("a")
+            link.classList.add("search-result")
+            link.setAttribute("data-id", data[i].id)
+            link.href = "teacher/classes?c=" + data[i].id
+            link.title = data[i].class_name
+            
+            const linkTitle = document.createElement("h3")
+            linkTitle.classList.add("search-result-title")
+            linkTitle.innerHTML = data[i].class_name
+
+            const linkDesc = document.createElement("p")
+            linkDesc.classList.add("search-result-desc")
+            linkDesc.innerHTML = data[i].description
+
+            link.appendChild(linkTitle)
+            link.appendChild(linkDesc)
+
+            document.getElementById("search-results").appendChild(link)
+        }
+
+    }
+})
+
 
 /** UX for mobile */
 document.getElementById("profile").addEventListener("click", () => {

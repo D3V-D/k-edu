@@ -203,7 +203,7 @@ h1 {
     font-weight: 600;
 }
 
-.incorrect {
+.error {
     color: red;
     display: none;
 }

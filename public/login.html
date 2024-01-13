@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://*.googleapis.com; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://www.gstatic.com;"/>
+        content="default-src 'self' https://*.supabase.co; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://cdn.jsdelivr.net;"/>
         <title>Login to K-Edu</title>
 
         <link href="css/template/noscript.css" rel="stylesheet">
@@ -42,13 +42,7 @@
                 <h1 id="welcome">Login to K-Edu</h1>
             </div>
 
-            <h3 class="incorrect" id="wrong">
-                Incorrect email or password.
-            </h3>
-
-            <h3 class="incorrect" id="too-many-requests">
-                Access to the account has been temporarily disabled due to many failed login attempts.
-                You can restore now by resetting password, or try again later.
+            <h3 class="error" id="wrong">
             </h3>
 
             <form id="login-form">

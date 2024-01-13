@@ -13,6 +13,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: auto;
     justify-content: center;
     height: 100vh;
     width: 100vw;
@@ -77,9 +78,10 @@ h2 {
     border: solid 1px rgb(78, 78, 78);
     backdrop-filter: blur(5px);
     position: absolute;
-    top: 200px;
-    margin-bottom: 50px;
+    top: 50%;
+    transform: translateY(-50%);
 }
+
 
 .input-deco-text {
     color: rgb(57, 253, 237);
@@ -189,6 +191,41 @@ input:placeholder-shown {
 
 .continue-btn:hover > .stem {
     width: 10px;
+}
+
+#eye {
+    height: 100%;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+#signup-reqs {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.unmet {
+    background-image: url('../assets/icons/circle-regular.svg');
+    background-repeat: no-repeat;
+    background-size: 15px;
+}
+
+.met {
+    background-image: url('../assets/icons/circle-check-regular.svg');
+    background-repeat: no-repeat;
+    background-size: 15px;
+}
+
+.req {
+    font-size: 12px;
+    padding-left: 20px;
+}
+
+#signup-error {
+    color: rgb(255, 0, 0);
+    font-size: 12px;
+    margin-block: -10px;
 }
 
 #signup-btn {

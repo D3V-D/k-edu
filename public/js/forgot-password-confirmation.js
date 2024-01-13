@@ -1,20 +1,27 @@
-import { auth, confirmPasswordReset } from "./firebase.js";
+import { supabase } from "./supabase.js";
 
-const oobCode = new URLSearchParams(window.location.search).get('oobCode');
-
-document.getElementById("modal-text").innerHTML = `
-        <form id="forgot-password-form">
-            <div class="input-container">
-                <input required class="input-box" id="password-1" type="password" placeholder=" ">
-                <label class="input-label" for="email">Password</label>
-            </div>
-            <div class="input-container">
-                <input required class="input-box" id="password-2" type="password" placeholder=" ">
-                <label class="input-label" for="email">Re-Type Password</label>
-            </div>
-            <button id="reset-button" type="submit">Complete Reset</button>
-        </form>
-`
+const subscription = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      // handle password recovery event
+      document.getElementById("modal-text").innerHTML = `
+      <form id="forgot-password-form">
+          <div class="input-container">
+              <input required class="input-box" id="password-1" type="password" placeholder=" ">
+              <label class="input-label" for="email">Password</label>
+          </div>
+          <div class="input-container">
+              <input required class="input-box" id="password-2" type="password" placeholder=" ">
+              <label class="input-label" for="email">Re-Type Password</label>
+          </div>
+          <button id="reset-button" type="submit">Complete Reset</button>
+      </form>
+        `
+    } else {
+        document.getElementById("modal-text").innerHTML = `
+            <p style="width: 100%; text-align: center">Could not complete reset. Please try again later.</p>
+        `
+    }
+})
 
 document.getElementById("forgot-password-form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -22,21 +29,20 @@ document.getElementById("forgot-password-form").addEventListener("submit", async
     const confirmPassword = document.getElementById("password-2").value
     const passwordChecked = await checkPassword()
     if (password === confirmPassword && passwordChecked === "passed") {
-        confirmPasswordReset(auth, oobCode, password)
-            .then(() => {
-                document.getElementById('modal-text').innerText = 'Password reset successful. Redirecting to login...'
-                setTimeout(() => {
-                    window.location.href = '../login'
-                }, 3000)
-            }).catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode, errorMessage)
+        const response = await supabase.auth.updateUser({ password: password })
+        
+        if (response.error) {
+            console.error(response.error)
+            const passwordError = document.getElementById("password-error");
+            passwordError.style.color = "red";
+            passwordError.innerHTML = response.error.message;
+            return
+        }
 
-                const passwordError = document.getElementById("password-error");
-                passwordError.style.color = "red";
-                passwordError.innerHTML = errorMessage;
-            })
+        document.getElementById('modal-text').innerText = 'Password reset successful. Redirecting to login...'
+        setTimeout(() => {
+            window.location.href = '../login'
+        }, 3000)
     }
 })
 

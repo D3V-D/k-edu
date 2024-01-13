@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://*.googleapis.com; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://www.gstatic.com;"/>
+        content="default-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://cdn.jsdelivr.net;"/>
         <title>Teacher Dashboard</title>
 
         <link href="css/template/scrollbars.css" rel="stylesheet">
@@ -71,7 +71,13 @@
 
         <main id="content">
             <div id="top-bar" class="row">
-                <input title="Search" type="search" id="search" placeholder="Search">
+                <div id="search-container">
+                    <input autocomplete="off" title="Search" type="search" id="search" placeholder="Search">
+                    <div id="search-results">
+                        Type and hit enter to search.
+                    </div>
+                </div>
+
                 <div id="profile" title="Profile">
                     <img id="profile-img" alt="Profile Picture" src="assets/imgs/profile.svg">
                     <div id="profile-dropdown">
@@ -96,10 +102,12 @@
             </div>
 
             <h2 class="section-header" title="See All Classes">Classes <div class="stem"></div></h2>
-            <div class="row tray-row scroll-x" id="classes">
+            <div class="row tray-row scroll-x">
                 <button id="add-class" title="Add Class">
                     <img src="assets/icons/plus-dark.svg">
                 </button>
+                <div id="classes">
+                </div>
             </div>
 
             <h2 class="section-header" title="See All Messages">Messages <div class="stem"></div></h2>

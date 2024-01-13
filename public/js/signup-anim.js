@@ -30,7 +30,7 @@ async function initialAnimation() {
     document.getElementById("email-container").style.display = "none";
     document.getElementById("password-prompt").style.display = "none";
     document.getElementById("password-container").style.display = "none";
-    document.getElementById("password-confirm-container").style.display = "none";
+    document.getElementById("signup-reqs").style.display = "none";
 
     document.querySelectorAll(".continue-btn").forEach(btn => {
         btn.style.display = "none";
@@ -104,13 +104,13 @@ async function revealPasswordPrompt() {
     if (window.getComputedStyle(document.getElementById("password-prompt")).getPropertyValue("display") == "none") {
         const prompt = document.getElementById("password-prompt");
         const passwordContainer = document.getElementById("password-container");
-        const passwordConfirmContainer = document.getElementById("password-confirm-container");
 
         document.getElementById("email-continue-btn").style.display = "none";
         await typeWriter(prompt);
         passwordContainer.style.display = "flex";
-        passwordConfirmContainer.style.display = "flex";
-        document.getElementById("password-check-btn").style.display = "flex";
+        document.getElementById("signup-btn").style.height = "auto";
+        document.getElementById("signup-btn").style.opacity = "1";
+        document.getElementById("signup-reqs").style.display = "flex";
         document.getElementById('password').focus()
     }
 }
@@ -118,49 +118,76 @@ async function revealPasswordPrompt() {
 document.getElementById("email-continue-btn").addEventListener("click", revealPasswordPrompt);
 
 /** make sure password is secure */
-async function handlePasswordKeyDown(e) {
-    if (e.key == "Enter") {
-        e.preventDefault();
-    }
-}
+document.getElementById("password").addEventListener("input", checkPassword);
 
-document.getElementById("password").addEventListener("keydown", handlePasswordKeyDown);
 
 async function checkPassword() {
     let password = document.getElementById("password").value;
-    let passwordConfirmation = document.getElementById("password-confirm").value;
-    const passwordError = document.getElementById("password-error");
+    let pass = true;
 
-    passwordError.style.color = "red";
     if (password.length < 8) {
-        passwordError.innerHTML = "Password must be at least 8 characters long.";
-    } else if (password.toLowerCase().includes(document.getElementById("name").value.toLowerCase())) {
-        passwordError.innerHTML = "Password cannot contain your name.";
-    } else if (!/[A-Z]/.test(password)) {
-        passwordError.innerHTML = "Password must have at least 1 uppercase letter.";
-    } else if (!/[a-z]/.test(password)) {
-        passwordError.innerHTML = "Password must have at least 1 lowercase letter.";
-    } else if (!/[0-9]/.test(password)) {
-        passwordError.innerHTML = "Password must have at least 1 number.";
-    } else if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
-        passwordError.innerHTML = "Password must have at least 1 special character.";
-    } else if (passwordConfirmation !== password) {
-        passwordError.innerHTML = "Passwords do not match.";
+        pass = false
+        document.getElementById("char-req").classList.remove("met");
+        document.getElementById("char-req").classList.add("unmet");
     } else {
-
-        if (document.getElementById("password-check-btn").style.display == "flex") {
-            document.getElementById("password-check-btn").style.display = "none";
-        }
-
-        passwordError.style.color = "green";
-        passwordError.innerHTML = "Password passes all tests.";
-        document.getElementById("signup-btn").style.height = "auto";
-        document.getElementById("signup-btn").style.opacity = "1";
-        return "passed";
+        document.getElementById("char-req").classList.remove("unmet");
+        document.getElementById("char-req").classList.add("met");
     }
+
+    if (/[A-Z]/.test(password)) {
+        document.getElementById("upper-req").classList.remove("unmet");
+        document.getElementById("upper-req").classList.add("met");
+    } else {
+        pass = false
+        document.getElementById("upper-req").classList.remove("met");
+        document.getElementById("upper-req").classList.add("unmet");
+    }
+
+    if (/[a-z]/.test(password)) {
+        document.getElementById("lower-req").classList.remove("unmet");
+        document.getElementById("lower-req").classList.add("met");
+    } else {
+        pass = false
+        document.getElementById("lower-req").classList.remove("met");
+        document.getElementById("lower-req").classList.add("unmet");
+    }
+
+    if (/[0-9]/.test(password)) {
+        document.getElementById("num-req").classList.remove("unmet");
+        document.getElementById("num-req").classList.add("met");
+    } else {
+        pass = false
+        document.getElementById("num-req").classList.remove("met");
+        document.getElementById("num-req").classList.add("unmet");
+    }
+    
+    if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+        document.getElementById("symbol-req").classList.remove("unmet");
+        document.getElementById("symbol-req").classList.add("met");
+    } else {
+        pass = false
+        document.getElementById("symbol-req").classList.remove("met");
+        document.getElementById("symbol-req").classList.add("unmet");
+    }
+
+    return pass ? "passed" : "failed";
 }
 
-document.getElementById("password-check-btn").addEventListener("click", checkPassword);
+document.getElementById("eye").addEventListener("click", handleEye)
+
+function handleEye() {
+    const eye = document.getElementById("eye");
+
+    if (eye.classList.contains("slashed")) {
+        eye.classList.remove("slashed");
+        eye.src = "assets/icons/eye-regular.svg"
+        document.getElementById("password").type = "text";
+    } else {
+        eye.classList.add("slashed");
+        eye.src = "assets/icons/eye-slash-regular.svg"
+        document.getElementById("password").type = "password";
+    }
+}
 
 /** helper functions */
 async function typeWriter(element) {
@@ -173,4 +200,3 @@ async function typeWriter(element) {
         await new Promise(resolve => setTimeout(resolve, 50));
     }
 }  
-
