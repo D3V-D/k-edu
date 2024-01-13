@@ -45,7 +45,7 @@ const subscription = supabase.auth.onAuthStateChange((event, session) => {
         currentUser = session.user
         if (session.user.user_metadata.role == 'student') {
             window.location = "../student"
-        } else if (session.user.user_metadata.role != 'student') {
+        } else if (session.user.user_metadata.role != 'teacher') {
             window.location = "../login"
         }
     }

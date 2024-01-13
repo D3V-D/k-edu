@@ -1,23 +1,36 @@
-import { auth, onAuthStateChanged, signOut } from "./supabase.js";
-import { getUserRole } from "./userRoles.js";
+import { supabase } from "./supabase.js";
 
 let currentUser;
-onAuthStateChanged(auth, async (user) => {
-    try {
-        if (user) {
-            currentUser = user
-            let data = await getUserRole(user.uid)
+const subscription = supabase.auth.onAuthStateChange((event, session) => {
+    let userRole;
 
-            if (data.role == 'teacher') {
-                document.getElementById("loading").style.display = "none";
-            } else if (data.role == 'student') {
-                window.location = "../student"
-            }
-        } else {
+    if (session != null) {
+        userRole = session.user.user_metadata.role
+    }
+    
+    if (event === 'INITIAL_SESSION') {
+        if (session == null || (userRole != 'teacher' && userRole != 'student')) {
+            window.location.href = "../login";
+        } else if (userRole == 'student') {
+            window.location.href = "../student";
+        } else if (userRole == 'teacher') {
+            // handle initial session
+            currentUser = session.user
+            document.getElementById("loading").style.display = "none";
+            // init markdown editor
+            initEditor()
+        }
+    } else if (event === 'SIGNED_IN') {
+        currentUser = session.user
+    } else if (event === 'SIGNED_OUT') {
+        window.location.href = "../login";
+    } else if (event === 'USER_UPDATED') {
+        currentUser = session.user
+        if (session.user.user_metadata.role == 'student') {
+            window.location = "../student"
+        } else if (session.user.user_metadata.role != 'teacher') {
             window.location = "../login"
         }
-    } catch (error) {
-        console.error(error)
     }
 })
 
@@ -65,6 +78,12 @@ document.getElementById("lesson-name-label").innerHTML = `Lesson Name (${documen
 
 document.getElementById("lesson-name").addEventListener("input", () => {
     document.getElementById("lesson-name-label").innerHTML = `Lesson Name (${document.getElementById("lesson-name").value.length}/50)`
+})
+
+document.getElementById("pdf-additional-text-label").innerHTML = `Additional Information (${document.getElementById("pdf-additional-text").value.length}/1500)`
+
+document.getElementById("pdf-additional-text").addEventListener("input", () => {
+    document.getElementById("pdf-additional-text-label").innerHTML = `Additional Information (${document.getElementById("pdf-additional-text").value.length}/1500)`
 })
 
 // initialize date input
@@ -152,7 +171,7 @@ function showCorrectEditor() {
         document.getElementById("pdf-url").disabled = false;
 
         // show pdf viewer
-        document.getElementById("markdown-editor").style.display = "none";
+        document.getElementById("markdown-editor-container").style.display = "none";
         document.getElementById("pdf-viewer").style.display = "flex";
         updatePDFViewer()
     }
@@ -160,7 +179,7 @@ function showCorrectEditor() {
     if (lessonFormat === "markdown") {
         // show markdown editor
         document.getElementById("pdf-viewer").style.display = "none";
-        document.getElementById("markdown-editor").style.display = "flex";
+        document.getElementById("markdown-editor-container").style.display = "flex";
         document.getElementById("pdf-url").value = "";
         document.getElementById("pdf-url").disabled = true;
     }
@@ -179,8 +198,23 @@ function updatePDFViewer() {
         return
     }
 
-    document.getElementById("pdf").data = document.getElementById("pdf-url").value
-    document.getElementById("download-pdf-link").href = document.getElementById("pdf-url").value
 }
 
 updatePDFViewer()
+
+function initEditor() {
+    const easyMDE = new EasyMDE({
+        element: document.getElementById("markdown"),
+        spellChecker: false,
+        autosave: {
+            enabled: true,
+            uniqueId: "lesson-editor",
+            delay: 1000,
+        },
+        forceSync: true,
+        promptURLs: true,
+        sideBySideFullscreen: false,
+        hideIcons: ["heading"],
+        showIcons: ["code", "table", "link", "strikethrough", "undo", "redo", "heading-1", "heading-2", "heading-3"],
+    })
+}

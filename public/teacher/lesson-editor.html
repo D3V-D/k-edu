@@ -6,14 +6,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://*.supabase.co; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://cdn.jsdelivr.net;"/>
-        <title>Teacher Dashboard</title>
+        content="default-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com; script-src 'self' https://cdn.jsdelivr.net;"/>
+        <title>Lesson Editor | K-Edu</title>
 
         <link href="../css/template/teacher-template.css" rel="stylesheet">    
         <link href="../css/template/scrollbars.css" rel="stylesheet">
         <link href="../css/template/noscript.css" rel="stylesheet">
         <link href="../css/template/loader.css" rel="stylesheet">
         <link href="../css/lesson-editor.css" rel="stylesheet">
+
+        <!-- Markdown editor -->
+        <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 
         <link rel="preconnect" href="https://fonts.gstatic.com"/>
 
@@ -132,13 +139,19 @@
                     </div>
 
                     <div id="pdf-viewer">
-                        <object id="pdf" data="" type="application/pdf" width="100%" height="600px">
-                            <p>Unable to display PDF file. Make sure there is a valid url first, or <a id="download-pdf-link" href="">download</a> instead.</p>
-                        </object>
+                        
                     </div>
-                    <div id="markdown-editor">
+                    <div id="markdown-editor-container">
+                        <label id="markdown-label" for="markdown">Markdown</label>
+                        <textarea id="markdown" name="markdown" maxlength="10000" placeholder="You can type markdown here. Side-by-side (F9) is recommended for writing lesson."></textarea>
+                    </div>
+
+                    <div class="input-container">
+                        <label id="pdf-additional-text-label" for="pdf-additional-text">Additional Information</label>
+                        <textarea maxlength="1500" id="pdf-additional-text" name="pdf-additional-text" placeholder="Additional information about this lesson"></textarea>
+                    </div>
+
                     
-                    </div>
                 </form>
             </div>
 
