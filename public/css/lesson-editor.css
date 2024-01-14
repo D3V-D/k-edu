@@ -236,6 +236,6 @@ textarea {
 }
 
 #pdf-viewer {
-    min-height: 100vh;
+    min-height: 100%;
     width: 95%;
 }

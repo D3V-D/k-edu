@@ -1,15 +1,13 @@
 const https = require('https');
 
-// whitelist of allowed domains (not open proxy)
-// localhost only for testing
+// Whitelist of allowed domains (not open proxy)
+// Localhost only for testing
 const allowedDomains = ["https://k-edu.netlify.app", "http://localhost:8888"];
 
 exports.handler = async function (event, context) {
   const { queryStringParameters, headers } = event;
   const { file, url: targetUrl } = queryStringParameters;
   const referer = headers.referer || headers.Referer; // Check both cases
-
-  console.log(context)
 
   // Check if the Referer header is present and matches the allowedDomains
   if (referer && allowedDomains.some(domain => referer.startsWith(domain))) {
@@ -24,12 +22,11 @@ exports.handler = async function (event, context) {
     const pdfRegex = new RegExp(pdfRegexPattern, 'i');
 
     if (!pdfRegex.test(targetUrl)) {
-        return {
-          statusCode: 403,
-          body: 'Access Forbidden. Only PDF files are allowed.',
-        };
+      return {
+        statusCode: 403,
+        body: 'Access Forbidden. Only PDF files are allowed.',
+      };
     }
-
 
     const options = new URL(targetUrl);
     const proxy = options.protocol === 'https:' ? https : http;
@@ -37,20 +34,27 @@ exports.handler = async function (event, context) {
     try {
       const proxyRes = await new Promise((resolve, reject) => {
         const proxyReq = proxy.request(options, (res) => {
-          let data = '';
+          const chunks = [];
 
           res.on('data', (chunk) => {
-            data += chunk;
+            chunks.push(chunk);
           });
 
           res.on('end', () => {
+            const data = Buffer.concat(chunks);
+
+            // Convert the binary data to a base64-encoded string
+            // serverless funcs require string response
+            const base64String = data.toString('base64');
+
             resolve({
               statusCode: res.statusCode,
               headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Content-Type': res.headers['content-type'],
+                'Content-Type': 'application/pdf',
               },
-              body: data,
+              body: base64String,
+              isBase64Encoded: true,
             });
           });
         });
