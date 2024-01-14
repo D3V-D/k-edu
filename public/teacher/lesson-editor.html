@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com; script-src 'self' https://cdn.jsdelivr.net;"/>
+        content="default-src 'self' https://*.supabase.co wss://*.supabase.co https://*; img-src 'self' https://*; child-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com; script-src 'self' https://cdn.jsdelivr.net;"/>
         <title>Lesson Editor | K-Edu</title>
 
         <link href="../css/template/teacher-template.css" rel="stylesheet">    
@@ -138,9 +138,9 @@
                         <input type="url" title="A valid https:// URL of a PDF." id="pdf-url" name="pdf-url" pattern="^https:\/\/[^\/]+\.[^\/]+\/.+\.pdf.*$" placeholder="Enter a https:// url">
                     </div>
 
-                    <div id="pdf-viewer">
+                    <iframe id="pdf-viewer" sandbox="allow-same-origin allow-scripts allow-downloads" title="PDF Viewer; Preview student view">
                         
-                    </div>
+                    </iframe>
                     <div id="markdown-editor-container">
                         <label id="markdown-label" for="markdown">Markdown</label>
                         <textarea id="markdown" name="markdown" maxlength="10000" placeholder="You can type markdown here. Side-by-side (F9) is recommended for writing lesson."></textarea>

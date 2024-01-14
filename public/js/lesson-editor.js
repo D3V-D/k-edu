@@ -198,6 +198,10 @@ function updatePDFViewer() {
         return
     }
 
+    // iframe shows pdfjs, which proxies url to circumvent CORs
+    let iframeURL = window.location.origin + "/pdfjs/web/viewer.html?file=" + window.location.origin + "/proxy/" + url
+    document.getElementById("pdf-viewer").src = iframeURL;
+
 }
 
 updatePDFViewer()

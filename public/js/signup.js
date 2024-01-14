@@ -4,7 +4,13 @@ const subscription = supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'INITIAL_SESSION') {
             if (session == null) {
                 document.getElementById("loading").style.display = "none";
-            } 
+            } else {
+                if (session.user.user_metadata.role == 'teacher') {
+                    window.location = "../teacher"
+                } else if (session.user.user_metadata.role == 'student') {
+                    window.location = "../student"
+                }
+            }
         } else if (event === 'SIGNED_IN') {
             console.log("Signed in already!");
             if (session.user.user_metadata.role == 'teacher') {

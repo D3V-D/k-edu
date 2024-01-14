@@ -234,3 +234,8 @@ textarea {
     flex-direction: column;
     width: 100%;
 }
+
+#pdf-viewer {
+    min-height: 100vh;
+    width: 95%;
+}
