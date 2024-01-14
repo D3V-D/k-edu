@@ -247,4 +247,5 @@ textarea {
 #pdf-viewer {
     min-height: 100%;
     width: 95%;
+    border: none;
 }

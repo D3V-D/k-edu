@@ -2300,34 +2300,34 @@
   --doorhanger-icon-opacity:0.9;
   --editor-toolbar-base-offset:105px;
 
-  --main-color:rgb(12 12 13);
-  --body-bg-color:rgb(212 212 215);
+  --main-color:rgb(11, 55, 105);
+  --body-bg-color:rgba(87, 206, 141, 0.363);
   --progressBar-color:rgb(10 132 255);
   --progressBar-bg-color:rgb(221 221 222);
   --progressBar-blend-color:rgb(116 177 239);
   --scrollbar-color:auto;
   --scrollbar-bg-color:auto;
-  --toolbar-icon-bg-color:rgb(0 0 0);
-  --toolbar-icon-hover-bg-color:rgb(0 0 0);
+  --toolbar-icon-bg-color:rgb(7, 95, 153);
+  --toolbar-icon-hover-bg-color:rgb(8, 63, 88);
 
   --sidebar-narrow-bg-color:rgb(212 212 215 / 0.9);
   --sidebar-toolbar-bg-color:rgb(245 246 247);
-  --toolbar-bg-color:rgb(249 249 250);
+  --toolbar-bg-color:rgba(59, 230, 207, 0.404);
   --toolbar-border-color:rgb(184 184 184);
   --toolbar-box-shadow:0 1px 0 var(--toolbar-border-color);
   --toolbar-border-bottom:none;
   --toolbarSidebar-box-shadow:inset calc(-1px * var(--dir-factor)) 0 0 rgb(0 0 0 / 0.25), 0 1px 0 rgb(0 0 0 / 0.15), 0 0 1px rgb(0 0 0 / 0.1);
   --toolbarSidebar-border-bottom:none;
-  --button-hover-color:rgb(221 222 223);
+  --button-hover-color:rgb(136, 193, 250);
   --toggled-btn-color:rgb(0 0 0);
   --toggled-btn-bg-color:rgb(0 0 0 / 0.3);
   --toggled-hover-active-btn-color:rgb(0 0 0 / 0.4);
   --toggled-hover-btn-outline:none;
-  --dropdown-btn-bg-color:rgb(215 215 219);
+  --dropdown-btn-bg-color:rgb(218, 245, 252);
   --dropdown-btn-border:none;
   --separator-color:rgb(0 0 0 / 0.3);
   --field-color:rgb(6 6 6);
-  --field-bg-color:rgb(255 255 255);
+  --field-bg-color:rgb(218, 245, 252);
   --field-border-color:rgb(187 187 188);
   --treeitem-color:rgb(0 0 0 / 0.8);
   --treeitem-bg-color:rgb(0 0 0 / 0.15);
@@ -2342,8 +2342,8 @@
   --doorhanger-hover-bg-color:rgb(237 237 237);
   --doorhanger-separator-color:rgb(222 222 222);
   --dialog-button-border:none;
-  --dialog-button-bg-color:rgb(12 12 13 / 0.1);
-  --dialog-button-hover-bg-color:rgb(12 12 13 / 0.3);
+  --dialog-button-bg-color:rgba(195, 195, 228, 0.1);
+  --dialog-button-hover-bg-color:rgba(22, 60, 109, 0.6);
 
   --loading-icon:url(images/loading.svg);
   --treeitem-expanded-icon:url(images/treeitem-expanded.svg);
@@ -2394,22 +2394,23 @@
   --inline-start:right;
   --inline-end:left;
 }
-
+/** Put back once dark theme implemented in main pages **/
+/* 
 @media (prefers-color-scheme: dark){
   :root:where(:not(.is-light)){
-    --main-color:rgb(249 249 250);
-    --body-bg-color:rgb(42 42 46);
+    --main-color:rgb(124, 197, 226);
+    --body-bg-color:rgb(42, 50, 58);
     --progressBar-color:rgb(0 96 223);
     --progressBar-bg-color:rgb(40 40 43);
     --progressBar-blend-color:rgb(20 68 133);
     --scrollbar-color:rgb(121 121 123);
     --scrollbar-bg-color:rgb(35 35 39);
-    --toolbar-icon-bg-color:rgb(255 255 255);
-    --toolbar-icon-hover-bg-color:rgb(255 255 255);
+    --toolbar-icon-bg-color:rgb(194, 240, 243);
+    --toolbar-icon-hover-bg-color:rgb(214, 229, 236);
 
     --sidebar-narrow-bg-color:rgb(42 42 46 / 0.9);
     --sidebar-toolbar-bg-color:rgb(50 50 52);
-    --toolbar-bg-color:rgb(56 56 61);
+    --toolbar-bg-color:rgb(3, 25, 32);
     --toolbar-border-color:rgb(12 12 13);
     --button-hover-color:rgb(102 102 103);
     --toggled-btn-color:rgb(255 255 255);
@@ -2418,7 +2419,7 @@
     --dropdown-btn-bg-color:rgb(74 74 79);
     --separator-color:rgb(0 0 0 / 0.3);
     --field-color:rgb(250 250 250);
-    --field-bg-color:rgb(64 64 68);
+    --field-bg-color:rgb(122, 129, 131);
     --field-border-color:rgb(115 115 115);
     --treeitem-color:rgb(255 255 255 / 0.8);
     --treeitem-bg-color:rgb(255 255 255 / 0.15);
@@ -2475,7 +2476,7 @@
     --doorhanger-separator-color:rgb(92 92 97);
     --dialog-button-bg-color:rgb(92 92 97);
     --dialog-button-hover-bg-color:rgb(115 115 115);
-  }
+  } */
 
 @media screen and (forced-colors: active){
   :root{
