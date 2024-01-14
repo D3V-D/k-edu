@@ -49,5 +49,10 @@
     to = "/404.html"
     status = 404
 
+[[redirects]]
+    from = "/teacher/classes/lessons"
+    to = "/teacher/lessons.html"
+    status = 200
+
 [functions]
     directory = "functions/"

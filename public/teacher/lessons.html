@@ -1,0 +1,13 @@
+<h1 id="title">ehllo</h1>
+<script>
+    // get query params
+    const urlParams = new URLSearchParams(window.location.search);
+    const classId = urlParams.get('c');
+    const lessonId = urlParams.get('l');
+    
+    if (lessonId == null) {
+        window.location = "../classes?c=" + classId
+    }
+
+    document.getElementById('title').innerHTML = "Hello, welcome to class " + classId + " and lesson " + lessonId
+</script>

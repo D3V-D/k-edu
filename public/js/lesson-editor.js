@@ -126,8 +126,6 @@ function disableBasedOnLessonType(e) {
     }
 }
 
-disableBasedOnLessonType()
-
 document.getElementById("due-date").addEventListener("input", disableBasedOnDate)
 
 function disableBasedOnDate(e) {
@@ -135,12 +133,13 @@ function disableBasedOnDate(e) {
     if (dueDate === "") {
         document.getElementById("due-time").value = "";
         document.getElementById("due-time").disabled = true;
+        document.getElementById("due-time").required = false;
     } else {
         document.getElementById("due-time").disabled = false;
+        document.getElementById("due-time").required = true;
     }
 }
 
-disableBasedOnDate()
 
 document.getElementById("lock").addEventListener("input", disableBasedOnLock)
 
@@ -157,7 +156,7 @@ function disableBasedOnLock(e) {
     }
 }
 
-disableBasedOnLock()
+
 
 document.getElementById("unlock-date").addEventListener("input", disableBasedOnLockDate)
 
@@ -172,13 +171,10 @@ function disableBasedOnLockDate(e) {
     }
 }
 
-disableBasedOnLockDate()
-
 document.getElementById("module").addEventListener("input", disableBasedOnModule)
 
 function disableBasedOnModule(e) {
     let newOrPreExisting = document.getElementById("module").value
-
     if (newOrPreExisting === "new") {
         document.getElementById("module-create").style.display = "flex";
         document.getElementById("module-name").disabled = false;
@@ -190,11 +186,11 @@ function disableBasedOnModule(e) {
 
         document.getElementById("module-select").style.display = "none";
         document.getElementById("module-select").disabled = true;
-        document.getElementById("module-select").required = false
+        document.getElementsByName("module").forEach((el) => el.required = false)
     } else {
         document.getElementById("module-select").style.display = "flex";
         document.getElementById("module-select").disabled = false;
-        document.getElementById("module-select").required = true
+        document.getElementsByName("module").forEach((el) => el.required = true)
 
         document.getElementById("module-create").style.display = "none";
         document.getElementById("module-name").disabled = true;
@@ -205,9 +201,6 @@ function disableBasedOnModule(e) {
         document.getElementById("class-choice").required = false
     }
 }
-
-disableBasedOnModule()
-
 
 document.getElementById("lesson-format").addEventListener("input", showCorrectEditor)
 
@@ -238,8 +231,6 @@ function showCorrectEditor() {
     }
 }
 
-showCorrectEditor()
-
 document.getElementById("pdf-url").addEventListener("input", updatePDFViewer)
 
 function updatePDFViewer() {
@@ -263,10 +254,9 @@ function updatePDFViewer() {
     document.getElementById("pdf-viewer").src = iframeURL;
 }
 
-updatePDFViewer()
-
-function initEditor() {
-    const easyMDE = new EasyMDE({
+let easyMDE;
+async function initEditor() {
+    easyMDE = new EasyMDE({
         element: document.getElementById("markdown"),
         spellChecker: false,
         autosave: {
@@ -346,5 +336,152 @@ async function initPage() {
     await initEditor()    
     await initClasses()
     await initModules()
+    disableBasedOnModule()
+    disableBasedOnLessonType()
+    disableBasedOnDate()
+    disableBasedOnLock()
+    disableBasedOnLockDate()
+    showCorrectEditor()
+    updatePDFViewer()
+
     document.getElementById("loading").style.display = "none";
+}
+
+// handle db updates
+document.getElementById("create-form").addEventListener("submit", handleLessonCreation)
+
+async function handleLessonCreation(e) {
+    e.preventDefault()
+
+    let confirmation = confirm("Are you sure you want to create this lesson?")
+
+    if (!confirmation) {
+        return
+    }
+
+    // first, get data
+    const lessonName = document.getElementById("lesson-name").value
+    const lessonType = document.getElementById("lesson-type").value
+    const htmlEnabled = document.getElementById("html").checked
+    const cssEnabled = document.getElementById("css").checked
+    const jsEnabled = document.getElementById("js").checked
+    const maxPoints = document.getElementById("lesson-points").value 
+    const locked = document.getElementById("lock").checked
+    const unlockDate = document.getElementById("unlock-date").value
+    const unlockTime = document.getElementById("unlock-time").value
+    
+    const lessonFormat = document.getElementById("lesson-format").value
+    let contents = ""
+    let addtionalTextForPDF = ""
+    if (lessonFormat == "markdown") {
+        contents = easyMDE.value()
+    } else {
+        contents = document.getElementById("pdf-url").value
+        addtionalTextForPDF = document.getElementById("pdf-additional-text").value
+    }
+
+    let createOrAddToModule = document.getElementById("module").value
+    let moduleId;
+    let classId;
+    if (createOrAddToModule == "new") {
+        // create a module for the lesson
+        classId = document.getElementById("class-choice").value
+        const moduleName = document.getElementById("module-name").value
+        const moduleDescription = document.getElementById("module-description").value
+        
+        const moduleData = {
+            class_id: classId,
+            module_name: moduleName,
+            description: moduleDescription,
+            teacher_uid: currentUser.id
+        }
+
+        const resp = await supabase.from("modules").insert(moduleData).select()
+
+        if (resp.error) {
+            console.error(resp.error)
+            alert("Failed to create lesson: Error while creating module.")
+            return
+        }
+
+        moduleId = resp.data[0].id
+    } else if (createOrAddToModule == "existing") {
+        // just get the module id & its class id
+        const moduleChoices = document.getElementsByName("module")
+        moduleChoices.forEach((moduleChoice) => {
+            if (moduleChoice.checked) {
+                moduleId = moduleChoice.value
+            }
+        })
+
+        console.log("module id: " + moduleId)
+
+        const { data, error } = await supabase.from("modules")
+                                                .select("class_id")
+                                                .eq("id", moduleId)
+
+        if (error) {
+            console.error(error)
+            alert("Failed to create lesson: Error in getting module data.")
+            return
+        }
+
+        classId = data[0].class_id
+    }
+
+    let insertData = {
+        class_id: classId,
+        module_id: moduleId,
+        teacher_uid: currentUser.id,
+        lesson_name: lessonName,
+        lesson_type: lessonType,
+        lesson_format: lessonFormat,
+        total_points: maxPoints,
+        content: contents,
+        locked: locked,
+        html_enabled: htmlEnabled,
+        css_enabled: cssEnabled,
+        js_enabled: jsEnabled
+        // TODO: questions for quizzes
+    }
+
+    // calculate exact due date & unlock date using selected day + time
+    if (!document.getElementById("due-time").disabled)  {
+        const dueDate = document.getElementById("due-date").value
+        const dueTime = document.getElementById("due-time").value
+        let dueDateTime = new Date(dueDate + "T" + dueTime);
+        
+        // add data to object
+        insertData = Object.assign({
+            due_date: dueDateTime.toISOString(),
+        }, insertData)
+    }
+
+
+    if (!unlockTime == "" && !unlockDate == "" && locked) {   
+        let unlockDateTime = new Date(unlockDate + "T" + unlockTime);
+        // add data to object
+        insertData = Object.assign({
+            unlock_date: unlockDateTime.toISOString(),
+        }, insertData)
+    }
+
+    if (addtionalTextForPDF != "") {
+        insertData = Object.assign({
+            pdf_extras: addtionalTextForPDF
+        }, insertData)
+    }
+
+    const { error } = await supabase.from("lessons").insert(insertData)
+
+    if (error) {
+        console.error(error)
+        alert("Failed to create lesson: " + error.message)
+        return
+    }
+
+    document.getElementById("lesson-editor").innerHTML = "Lesson created."
+    setTimeout(() => {
+        window.location.reload()
+    }, 3000)
 }
