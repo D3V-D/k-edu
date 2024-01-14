@@ -180,7 +180,6 @@ function showCorrectEditor() {
         // show markdown editor
         document.getElementById("pdf-viewer").style.display = "none";
         document.getElementById("markdown-editor-container").style.display = "flex";
-        document.getElementById("pdf-url").value = "";
         document.getElementById("pdf-url").disabled = true;
     }
 }
@@ -199,7 +198,7 @@ function updatePDFViewer() {
     }
 
     // iframe shows pdfjs, which proxies url to circumvent CORs
-    let iframeURL = window.location.origin + "/pdfjs/web/viewer.html?file=" + window.location.origin + "/proxy/" + url
+    let iframeURL = window.location.origin + "/pdfjs/web/viewer.html?file=" + window.location.origin + "/.netlify/functions/cors-proxy?url=" + url
     document.getElementById("pdf-viewer").src = iframeURL;
 
 }

@@ -49,6 +49,10 @@ body {
     cursor: pointer;
 }
 
+#profile-img {
+    width: 100%;
+}
+
 #profile-dropdown {
     position: absolute;
     z-index: 99;

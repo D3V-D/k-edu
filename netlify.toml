@@ -49,13 +49,5 @@
     to = "/404.html"
     status = 404
 
-[[redirects]]
-    # not open proxy, function has whitelist
-    # proxy opens pdf files only
-    from = "/proxy/*"
-    to = "/.netlify/functions/cors-proxy?url=:splat"
-    status = 200
-    force = true
-
 [functions]
     directory = "functions/"
