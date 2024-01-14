@@ -24,7 +24,7 @@ exports.handler = async function (event, context) {
     if (!pdfRegex.test(targetUrl)) {
       return {
         statusCode: 403,
-        body: 'Access Forbidden. Only PDF files are allowed.',
+        body: 'Access Forbidden. Only https PDF files are allowed.',
       };
     }
 

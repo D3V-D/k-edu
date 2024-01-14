@@ -141,17 +141,44 @@
                     <iframe id="pdf-viewer" title="PDF Viewer; Preview student view" src="">      
                     </iframe>
                     
-                    <div id="markdown-editor-container">
-                        <label id="markdown-label" for="markdown">Markdown</label>
-                        <textarea id="markdown" name="markdown" maxlength="10000" placeholder="You can type markdown here. Side-by-side (F9) is recommended for writing lesson."></textarea>
-                    </div>
-
-                    <div class="input-container">
+                    <div class="input-container" id="pdf-additional">
                         <label id="pdf-additional-text-label" for="pdf-additional-text">Additional Information</label>
                         <textarea maxlength="1500" id="pdf-additional-text" name="pdf-additional-text" placeholder="Additional information about this lesson"></textarea>
                     </div>
 
+                    <div id="markdown-editor-container">
+                        <label id="markdown-label" for="markdown">Markdown</label>
+                        <textarea id="markdown" name="markdown" maxlength="10000" placeholder="You can type markdown here. Side-by-side (F9) is recommended for writing lesson."></textarea>
+                    </div>
                     
+                    <div class="input-container">
+                        <label for="module" id="module-label">Module</label>
+                        <select id="module" name="module" class="select-input">
+                            <option value="new">Create New Module</option>
+                            <option value="existing">Use Pre-exising Module</option>
+                        </select>
+                    </div>
+
+                    <div class="input-container" id="module-create">
+                        <label id="class-choice-label" for="class-choice">Choose Class</label>
+                        
+                        <select id="class-choice" name="class-choice" class="select-input">
+                            <option value="null" disabled selected>-- Select Class --</option>
+                        </select>
+
+                        <label id="module-name-label" for="module-name">Module Name (0/50)</label>
+                        <input title="Module Name" maxlength="50" name="module-name" value="" class="text-box" type="text" id="module-name" placeholder="The name of your new module">
+                        <label id="module-description-label" for="module-description">Module Description (0/150)</label>
+                        <input title="Module Description" maxlength="150" name="module-description" value="" class="text-box" type="text" id="module-description" placeholder="The description of your new module">
+                        <label id="module-index"></label>
+                    </div>
+
+                    <fieldset class="input-container" id="module-select">
+                        <legend>Select Module</legend>
+                        No modules found.
+                    </fieldset>
+
+                    <button type="submit" id="submit">Create Lesson</button>
                 </form>
             </div>
 

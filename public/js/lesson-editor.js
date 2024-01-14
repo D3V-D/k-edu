@@ -16,9 +16,8 @@ const subscription = supabase.auth.onAuthStateChange((event, session) => {
         } else if (userRole == 'teacher') {
             // handle initial session
             currentUser = session.user
-            document.getElementById("loading").style.display = "none";
-            // init markdown editor
-            initEditor()
+            // initialize
+            initPage()
         }
     } else if (event === 'SIGNED_IN') {
         currentUser = session.user
@@ -84,6 +83,18 @@ document.getElementById("pdf-additional-text-label").innerHTML = `Additional Inf
 
 document.getElementById("pdf-additional-text").addEventListener("input", () => {
     document.getElementById("pdf-additional-text-label").innerHTML = `Additional Information (${document.getElementById("pdf-additional-text").value.length}/1500)`
+})
+
+document.getElementById("module-name-label").innerHTML = `Module Name (${document.getElementById("module-name").value.length}/50)`
+
+document.getElementById("module-name").addEventListener("input", () => {
+    document.getElementById("module-name-label").innerHTML = `Module Name (${document.getElementById("module-name").value.length}/50)`
+})
+
+document.getElementById("module-description-label").innerHTML = `Module Description (${document.getElementById("module-description").value.length}/150)`
+
+document.getElementById("module-description").addEventListener("input", () => {
+    document.getElementById("module-description-label").innerHTML = `Module Description (${document.getElementById("module-description").value.length}/150)`
 })
 
 // initialize date input
@@ -163,24 +174,67 @@ function disableBasedOnLockDate(e) {
 
 disableBasedOnLockDate()
 
+document.getElementById("module").addEventListener("input", disableBasedOnModule)
+
+function disableBasedOnModule(e) {
+    let newOrPreExisting = document.getElementById("module").value
+
+    if (newOrPreExisting === "new") {
+        document.getElementById("module-create").style.display = "flex";
+        document.getElementById("module-name").disabled = false;
+        document.getElementById("module-description").disabled = false;
+        document.getElementById("class-choice").disabled = false;
+        document.getElementById("module-name").required = true
+        document.getElementById("module-description").required = true
+        document.getElementById("class-choice").required = true
+
+        document.getElementById("module-select").style.display = "none";
+        document.getElementById("module-select").disabled = true;
+        document.getElementById("module-select").required = false
+    } else {
+        document.getElementById("module-select").style.display = "flex";
+        document.getElementById("module-select").disabled = false;
+        document.getElementById("module-select").required = true
+
+        document.getElementById("module-create").style.display = "none";
+        document.getElementById("module-name").disabled = true;
+        document.getElementById("module-description").disabled = true;
+        document.getElementById("class-choice").disabled = true;
+        document.getElementById("module-name").required = false
+        document.getElementById("module-description").required = false
+        document.getElementById("class-choice").required = false
+    }
+}
+
+disableBasedOnModule()
+
+
 document.getElementById("lesson-format").addEventListener("input", showCorrectEditor)
 
 function showCorrectEditor() {
     let lessonFormat = document.getElementById("lesson-format").value
     if (lessonFormat === "pdf") {
-        document.getElementById("pdf-url").disabled = false;
-
-        // show pdf viewer
+        // close markdown
         document.getElementById("markdown-editor-container").style.display = "none";
+
+        // open pdf
+        document.getElementById("pdf-url").disabled = false;
+        document.getElementById("pdf-url").required = true
+        // show pdf viewer
         document.getElementById("pdf-viewer").style.display = "flex";
+        document.getElementById("pdf-additional-text").disabled = false
+        document.getElementById("pdf-additional").style.display = "flex"
         updatePDFViewer()
     }
     
     if (lessonFormat === "markdown") {
         // show markdown editor
+        document.getElementById("pdf-additional").style.display = "none"
         document.getElementById("pdf-viewer").style.display = "none";
         document.getElementById("markdown-editor-container").style.display = "flex";
         document.getElementById("pdf-url").disabled = true;
+        document.getElementById("pdf-url").required = false
+        document.getElementById("pdf-additional-text").disabled = true
     }
 }
 
@@ -191,6 +245,13 @@ document.getElementById("pdf-url").addEventListener("input", updatePDFViewer)
 function updatePDFViewer() {
     let url = document.getElementById("pdf-url").value
 
+    if (url === "") {
+        // note: doesn't work in localhost as it is not a https: source
+        let iframeURL = window.location.origin + "/pdfjs/web/viewer.html?file=" + window.location.origin + "/.netlify/functions/cors-proxy?url=" + window.location.origin + "/pdfjs/web/example.pdf"
+        document.getElementById("pdf-viewer").src = iframeURL;
+        return
+    }
+
     // make sure url is a valid https url with a .pdf
     // matching ^https:\/\/[^\/]+\.[^\/]+\/.+\.pdf.*$
     if (!url.match(/^https:\/\/[^\/]+\.[^\/]+\/.+\.pdf.*/)) {
@@ -200,7 +261,6 @@ function updatePDFViewer() {
     // iframe shows pdfjs, which proxies url to circumvent CORs
     let iframeURL = window.location.origin + "/pdfjs/web/viewer.html?file=" + window.location.origin + "/.netlify/functions/cors-proxy?url=" + url
     document.getElementById("pdf-viewer").src = iframeURL;
-
 }
 
 updatePDFViewer()
@@ -220,4 +280,71 @@ function initEditor() {
         hideIcons: ["heading"],
         showIcons: ["code", "table", "link", "strikethrough", "undo", "redo", "heading-1", "heading-2", "heading-3"],
     })
+}
+
+async function initClasses() {
+    const { data, error } = await supabase.from("classes")
+            .select("class_name, description, id")
+            .eq("teacher_uid", currentUser.id)
+            .order("updated_at", { ascending: true })
+
+    if (error) {
+        console.error(error)
+        return
+    }
+   
+    for (let i = 0; i < data.length; i++) { 
+        const option = document.createElement("option")
+        option.value = data[i].id
+        option.text = data[i].class_name
+        option.title = data[i].description
+        document.getElementById("class-choice").appendChild(option)
+    }
+}
+
+async function initModules() {
+    const { data, error } = await supabase.from("modules")
+    .select("module_name, description, id")
+    .eq("teacher_uid", currentUser.id)
+    .order("updated_at", { ascending: true })
+
+    if (error) {
+        console.error(error)
+        return
+    }
+
+    if (data.length === 0) {
+        return
+    } else {
+        document.getElementById("module-select").innerHTML = "<legend>Select Module</legend>"
+    }
+
+    for (let i = 0; i < data.length; i++) {
+        const radio = document.createElement("input")
+        radio.type = "radio"
+        radio.name = "module"
+        radio.id = data[i].id
+        radio.value = data[i].id
+        radio.title = data[i].description
+
+        const label = document.createElement("label")
+        label.htmlFor = data[i].id
+        label.textContent = data[i].module_name
+        label.title = data[i].description
+
+        const inlineInput = document.createElement("div")
+        inlineInput.classList.add("inline-input")
+
+        inlineInput.append(radio)
+        inlineInput.append(label)
+
+        document.getElementById("module-select").appendChild(inlineInput)
+    }
+}
+
+async function initPage() {
+    await initEditor()    
+    await initClasses()
+    await initModules()
+    document.getElementById("loading").style.display = "none";
 }

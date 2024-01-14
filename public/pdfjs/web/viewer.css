@@ -3084,7 +3084,7 @@ body{
   -webkit-user-select:none;
      -moz-user-select:none;
           user-select:none;
-  cursor:default;
+  cursor:pointer;
   box-sizing:border-box;
 }
 

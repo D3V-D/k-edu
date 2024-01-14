@@ -322,3 +322,4 @@ function titleContainerSize() {
     let titleHeight = document.getElementById("welcome").offsetHeight
     document.getElementById("title-holder").style.minHeight = titleHeight + "px"
 }
+
