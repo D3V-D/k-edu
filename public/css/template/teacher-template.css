@@ -26,6 +26,7 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    background-color: white;
 }
 
 #profile-img {
@@ -35,7 +36,7 @@ body {
 #profile-dropdown {
     position: absolute;
     z-index: 99;
-    background-color: var(--secondary-bg-color);
+    background-color: var(--accent-color);
     top: 100%;
     width: fit-content;
     border: solid 1px var(--fg-color);
@@ -98,7 +99,7 @@ body {
     flex-direction: column;
     height: 100vh;
     width: clamp(100px, 10vw, 110px);
-    background-color: var(--secondary-bg-color);
+    background-color: var(--accent-color);
     align-items: center;
     margin-right: 25px;
 }
@@ -127,6 +128,7 @@ body {
 #link-holder > a > img {
     height: 100%;
     margin-right: 10px;
+    filter: var(--invert);
 }
 
 #link-holder > a:hover {

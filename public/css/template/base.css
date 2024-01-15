@@ -4,20 +4,28 @@
     /** THEME COLORS, SHOULD CHANGE IF DARK MODE IS USED **/
     --fg-color: rgb(4, 44, 54);
     --bg-color: #fff;
-    --secondary-bg-color: rgb(8, 192, 146);    
+    --accent-color: rgb(8, 192, 146);    
+    --search-bg-color: rgb(220, 245, 250);
+    --muted-bg-color: rgb(229, 245, 247);
+    --border-color: rgb(200, 200, 200);
     /** CONSTANTS **/
     --square-side-length: clamp(110px, 15vw, 200px);
+
+    --invert: invert(0);
 }
 
 /** add image srcs as variables here, and use bg-img in css instead of
  directly using images if possible. **/
-/* @media (prefers-color-scheme: dark){
+@media (prefers-color-scheme: dark){
     :root {
         --fg-color: #ffffff;
-        --bg-color: #111;
-        --secondary-bg-color: rgb(4, 40, 70);
+        --bg-color: #1c1c1c;
+        --muted-bg-color: #2c2c2c;
+        --border-color: rgb(100, 100, 100);
+        --invert: invert(1);
+        --search-bg-color: rgb(236, 253, 255);
     }
-} */
+}
 
 * {
     margin: 0;

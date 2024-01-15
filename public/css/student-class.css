@@ -1,0 +1,7 @@
+#modules {
+    min-height: 50vh;
+    padding-bottom: clamp(100px, 20vh, 200px);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}

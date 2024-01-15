@@ -54,5 +54,10 @@
     to = "/teacher/lessons.html"
     status = 200
 
+[[redirects]]
+    from = "/join-class"
+    to = "/join-class.html"
+    status = 200
+
 [functions]
     directory = "functions/"

@@ -67,7 +67,8 @@ async function createNewUser(inputName, inputEmail, inputPassword, inputAccountT
         {
             user_id: userId,
             role: inputAccountType,
-            name: inputName
+            name: inputName,
+            email: inputEmail
         }
     );
 

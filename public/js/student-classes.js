@@ -16,23 +16,24 @@ const subscription = supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'INITIAL_SESSION') {
         if (session == null || (userRole != 'teacher' && userRole != 'student')) {
             window.location.href = "../login";
-        } else if (userRole == 'student') {
-            window.location.href = "../student/classes?c=" + classId;
         } else if (userRole == 'teacher') {
+            window.location.href = "../teacher/classes?c=" + classId;
+        } else if (userRole == 'student') {
             // handle initial session
             currentUser = session.user
             initPage()
         }
     } else if (event === 'SIGNED_IN') {
+        console.log("Signed in.")
         currentUser = session.user
     } else if (event === 'SIGNED_OUT') {
         window.location.href = "../login";
     } else if (event === 'USER_UPDATED') {
         console.log("User updated")
         currentUser = session.user
-        if (session.user.user_metadata.role == 'student') {
-            window.location.href = "../student/classes?c=" + classId;
-        } else if (session.user.user_metadata.role != 'teacher') {
+        if (session.user.user_metadata.role == 'teacher') {
+            window.location = "../teacher"
+        } else if (session.user.user_metadata.role != 'student') {
             window.location = "../login"
         }
     }
@@ -45,7 +46,6 @@ async function setClassData() {
                             .from('classes')
                             .select('class_name, students, description, teacher_uid, class_join_id')
                             .eq('id', classId)
-                            .eq('teacher_uid', currentUser.id)
 
     if (error) {
         console.error(error)
@@ -60,16 +60,21 @@ async function setClassData() {
         return
     }
 
+    const students = data[0].students
     const class_name = data[0].class_name
     className = class_name // set global
     const class_desc = data[0].description
     const teacher_uid = data[0].teacher_uid
 
+    if (teacher_uid !== currentUser.id && !students.includes(currentUser.id)) {
+        document.getElementById("loading").style.display = "none"
+        document.getElementById('page').innerHTML = "Error: You are not in this class"
+        return
+    }
+
     document.getElementById('title').innerText = class_name
     document.getElementById('class-name').innerText = class_name
-    document.getElementById('class-name-update').value = class_name
     document.getElementById('class-description').innerText = class_desc
-    document.getElementById('class-description-update').value = class_desc
     document.getElementById('title').title = class_desc
     document.title = class_name + "| K-Edu | Teacher View"
 
@@ -88,95 +93,6 @@ async function setClassData() {
 
     document.getElementById('teacher-name').innerText = teacherRes.data[0].name
     document.getElementById('teacher-name').href = "mailto:" + teacherRes.data[0].email
-
-    // construct class join link
-    // join link is current host url + /join-class?c=class_id&p=_____
-    // where ____ is a randomly generated unique UID string for each class (in the db)
-    const classJoinId = data[0].class_join_id
-    const joinLink = window.location.origin + "/join-class?c=" + classId + "&p=" + classJoinId
-    document.getElementById('code').innerText = joinLink
-    document.getElementById('copy-code').addEventListener('click', () => {
-        navigator.clipboard.writeText(joinLink)
-        // show popup
-        document.getElementById('copy-popup').style.display = 'flex'
-        setTimeout(() => {
-            document.getElementById('copy-popup').style.display = 'none'
-        }, 1000)
-    })
-
-    
-    // get students
-    let students = data[0].students;
-    if (students != null && students.length > 0) {
-        students = await getStudentData(students)
-        setStudents(students)
-    }
-}
-
-async function getStudentData(studentIDs) {
-    const studentsRes = await supabase
-            .from('users')
-            .select('name, email, user_id')
-            .in('user_id', studentIDs)
-            .order('name', { ascending: true })
-
-    if (studentsRes.error) {
-        console.error(studentsRes.error)
-        document.getElementById("loading").style.display = "none"
-        document.getElementById('page').innerHTML = "Error in getting student data"
-        return
-    }
-
-    return studentsRes.data
-}
-
-async function setStudents(students) {
-    // set students
-    let studentList = document.getElementById('student-container')
-    if (students.length == 0) {
-        studentList.innerHTML = "No students yet. Add them with the join code above!"
-        return
-    }
-
-    if (students != null) {
-        studentList.innerHTML = ""
-        for (const student of students) {
-            let studentItem = document.createElement('div')
-            studentItem.classList.add('student-item')
-
-            let studentName = document.createElement('a')
-            studentName.innerText = student.name
-            studentName.href = "mailto:" + student.email
-            studentName.title = student.email
-            studentName.classList.add('student-name')
-            
-            let removeStudent = document.createElement('img')
-            removeStudent.src = "../assets/icons/delete (dark).svg"
-            removeStudent.title = "Remove Student"
-            removeStudent.setAttribute('data-id', student.user_id)
-            removeStudent.classList.add('remove-student')
-            removeStudent.addEventListener('click', async (e) => {
-                let confirmation = prompt("Are you sure you want to remove " + student.name + " from the class? If so, type 'yes'.")
-
-                if (confirmation !== "yes") {
-                    return
-                }
-
-                const res = await supabase
-                    .rpc('remove_student_from_class', { class_id: classId, student_id: student.user_id })
-                
-                if (res.error) {
-                    console.error(res.error)
-                    alert("Error in removing student")
-                    return
-                }
-            })
-
-            studentItem.appendChild(studentName)
-            studentItem.appendChild(removeStudent)
-            studentList.append(studentItem)
-        }
-    }
 }
 
 let observer; // can be updated if modules height changes
@@ -287,33 +203,6 @@ async function addModuleToDOM(module) {
     const moduleTitle = document.createElement('h3')
     moduleTitle.classList.add("module-name")
     moduleTitle.innerText = module.module_name
-    moduleTitle.title = module.description
-
-    const moduleDel = document.createElement('img')
-    moduleDel.classList.add("module-del")
-    moduleDel.src = "../assets/icons/delete (dark).svg"
-    moduleDel.addEventListener('click', async (e) => {
-        let confirmation = prompt("Are you sure you want to delete " + module.module_name + "? If so, type 'yes'.")
-
-        if (confirmation !== "yes") {
-            return
-        }
-
-        const res = await supabase
-            .from('modules')
-            .delete()
-            .eq('id', module.id)
-
-        if (res.error) {
-            console.error(res.error)
-            alert("Error in deleting module. Check console for further details")
-            return
-        }
-
-        document.getElementById(module.id).remove()
-    })
-    moduleDel.title = "Delete Module"
-    moduleTitle.append(moduleDel)
 
     const lessonsContainer = document.createElement('div')
     lessonsContainer.classList.add("lessons")
@@ -324,18 +213,7 @@ async function addModuleToDOM(module) {
         await addLessonToModule(lesson, lessonsContainer)
     }
 
-    const addLessonButton = document.createElement('a')
-    addLessonButton.classList.add("add-lesson")
-    addLessonButton.classList.add("lesson")
-    addLessonButton.href = `../teacher/lesson-editor`
-    addLessonButton.title = "Add Lesson"
-    const addLessonIcon = document.createElement('img')
-    addLessonIcon.classList.add("add-lesson-icon")
-    addLessonIcon.src = "../assets/icons/plus-dark.svg"
-    addLessonButton.appendChild(addLessonIcon)
-
-    
-    moduleDiv.append(moduleTitle, lessonsContainer, addLessonButton)
+    moduleDiv.append(moduleTitle, lessonsContainer)
     modulesSection.append(moduleDiv)
 }
 
@@ -344,7 +222,7 @@ async function addLessonToModule(lesson, lessonsContainer) {
     const lessonItem = document.createElement('a')
     lessonItem.classList.add("lesson")
     lessonItem.id = lesson.id
-    lessonItem.href = `../teacher/lesson-editor?c=${classId}&l=${lesson.id}`
+    lessonItem.href = `class/lesson?c=${classId}&l=${lesson.id}`
     lessonItem.title = lesson.lesson_name
 
     const lessonTitle = document.createElement('h4')
@@ -388,77 +266,9 @@ async function addLessonToModule(lesson, lessonsContainer) {
         }
     }
 
-
-    const options = document.createElement('img')
-    options.classList.add("lesson-options")
-    options.src = "../assets/icons/vertical-dots.svg"
-    options.title = "Options"
-    options.addEventListener("click", (e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        showOptions(e)
-    })
-
-    const optionsMenu = document.createElement('div')
-    optionsMenu.classList.add("options-menu")
-    
-    const optionsTitle = document.createElement('span')
-    optionsTitle.classList.add("options-title")
-    optionsTitle.innerText = "Options"
-    optionsMenu.append(optionsTitle)
-
-    const optionMove = document.createElement('span')
-    optionMove.classList.add("option")
-    optionMove.innerText = "Move Lesson"
-
-    const optionDelete = document.createElement('span')
-    optionDelete.classList.add("option")
-    optionDelete.innerText = "Delete Lesson"
-    optionDelete.addEventListener("click", async (e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        await deleteLesson(lesson.id)
-    })
-
-    const optionEdit = document.createElement('a')
-    optionEdit.classList.add("option")
-    optionEdit.innerText = "Edit Lesson"
-    optionEdit.href = `../teacher/lesson-editor`
-
-    optionsMenu.append(optionMove, optionDelete, optionEdit)
-
-
-    lessonInfo.append(lessonType, lessonPoints, lock, options, optionsMenu)
+    lessonInfo.append(lessonType, lessonPoints, lock)
     lessonItem.append(lessonTitle, lessonInfo)
     lessonsContainer.append(lessonItem)
-}
-
-function showOptions(e) {
-    // show options
-    const options = e.target
-    const optionsMenu = options.nextElementSibling
-    optionsMenu.style.display = "flex"
-
-    // hide options if click outside
-    document.addEventListener("click", (e) => {
-        if (!optionsMenu.contains(e.target)) {
-            optionsMenu.style.display = "none"
-        }
-    })
-}
-
-async function deleteLesson(lessonId) {
-    const { error } = await supabase.from("lessons")
-        .delete()
-        .eq("id", lessonId)
-    
-    if (error) {
-        console.error(error)
-        alert("Error in deleting lesson. Check the console for more info.")
-        return
-    }
-
-    document.getElementById(lessonId).remove()
 }
 
 async function initPage() {
@@ -470,67 +280,6 @@ async function initPage() {
     document.getElementById("loading").style.display = "none"
 }
 
-
-// input counters
-// get text inputs ONLY
-const textInputs = document.querySelectorAll('input[type="text"]')
-textInputs.forEach(input => {
-    input.addEventListener('input', updateCounter)
-    updateCounter({ target: input })
-})
-
-function updateCounter(e) {
-    const id = e.target.id
-    const max = e.target.maxLength
-    const value = e.target.value
-    const counter = document.getElementById(id + '-label')
-    let counterLabelText = counter.innerText
-
-    // get label text up to first parenthesis
-    counterLabelText = counterLabelText.split("(")[0]
-
-    counter.innerText = counterLabelText + " (" + value.length + "/" + max + ")"
-}
-
-// update class details
-document.getElementById("update-form").addEventListener("submit", async (e) => {
-    e.preventDefault()
-    const { error } = await supabase
-        .from('classes')
-        .update({
-            class_name: document.getElementById("class-name-update").value,
-            description: document.getElementById("class-description-update").value
-        })
-        .eq('id', classId)
-    
-    if (error) {
-        console.error(error)
-        alert("Error updating class. Check console for details.")
-        return
-    }
-})
-
-// delete class
-document.getElementById("delete-class").addEventListener("click", async (e) => {
-    let confirmation = prompt("Are you sure you want to delete this class? If so, type \"" + className + "\" below.")
-    if (confirmation !== className) {
-        return
-    }
-
-    const { error } = await supabase
-        .from('classes')
-        .delete()
-        .eq('id', classId)
-
-    if (error) {
-        console.error(error)
-        alert("Error deleting class. Check console for details.")
-        return
-    }
-
-    window.location.href = "../teacher"
-})
-
 // realtime updates
 const classUpdated = supabase.channel("class-update").on("postgres_changes", 
     { 
@@ -540,9 +289,9 @@ const classUpdated = supabase.channel("class-update").on("postgres_changes",
     }, (payload) => {
         const updatedClass = payload.new
         if (payload.old.students !== updatedClass.students) {
-            getStudentData(updatedClass.students).then((studentData) => {
-                setStudents(studentData)    
-            })
+            if (!updatedClass.students.includes(currentUser.id)) {
+                window.location.href = "../student/classes?c=" + classId
+            }
         }
 
         if (payload.old.class_name !== updatedClass.class_name) {

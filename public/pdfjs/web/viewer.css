@@ -2395,7 +2395,7 @@
   --inline-end:left;
 }
 /** Put back once dark theme implemented in main pages **/
-/* 
+
 @media (prefers-color-scheme: dark){
   :root:where(:not(.is-light)){
     --main-color:rgb(124, 197, 226);
@@ -2476,7 +2476,7 @@
     --doorhanger-separator-color:rgb(92 92 97);
     --dialog-button-bg-color:rgb(92 92 97);
     --dialog-button-hover-bg-color:rgb(115 115 115);
-  } */
+  }
 
 @media screen and (forced-colors: active){
   :root{

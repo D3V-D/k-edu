@@ -103,19 +103,6 @@ document.getElementById("modal-close").addEventListener("click", () => {
     document.getElementById('add-class-form').reset();
 })
 
-async function deleteClass(classId) {
-    const { error } = await supabase.from("classes").delete().eq("id", classId)
-    
-    if (error) {
-        console.error('Error:', error);
-        document.getElementById("overlay").style.display = "flex"
-        document.getElementById("modal-content-overlay").style.display = "flex"
-        document.getElementById("modal-content-overlay").innerHTML = error
-        document.getElementById("modal-content-overlay").style.color = 'red';
-        return
-    }
-}
-
 // initialize page.
 async function initPage() {
     let classes = await getClasses()
@@ -187,28 +174,10 @@ function addClassToList(class_name, class_desc, class_id) {
     link.innerHTML = "View";
     link.href = "teacher/classes?c=" + classId;
 
-
-    /** NOTE TO SELF: Move delete to class page, and 
-     * make it less error-prone (make the confirm prompt
-     * something like "Type the name of the class")
-     */
-    const deleteBtn = document.createElement("img");
-    deleteBtn.classList.add("class-delete");
-    deleteBtn.src = "assets/icons/delete (dark).svg";
-    deleteBtn.addEventListener("click", async (e) => {
-        e.preventDefault()
-        const confirmDelete = confirm("Are you sure you want to delete this class? This action cannot be undone.");
-        if (confirmDelete) {
-            await deleteClass(classId);
-        }
-    })
-    deleteBtn.title = "Delete Class";
-
     classDiv.appendChild(classTitle);
     classDiv.appendChild(classDescEl);
     classDiv.appendChild(link);
-    classDiv.appendChild(deleteBtn);
-
+    
     classesContainer.appendChild(classDiv);
 }
 

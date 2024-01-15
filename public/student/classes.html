@@ -13,6 +13,7 @@
         <link href="../css/template/noscript.css" rel="stylesheet">
         <link href="../css/template/loader.css" rel="stylesheet">
         <link href="../css/classes.css" rel="stylesheet">
+        <link href="../css/student-class.css" rel="stylesheet">
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
 
@@ -35,7 +36,7 @@
         <main id="page">
             <div id="container">
                 <div id="topbar">
-                    <a title="Back to Dashboard" href="../teacher"><img src="../assets/icons/arrow-right-solid (dark).svg" id="back"  aria-hidden="true"></a>
+                    <a title="Back to Dashboard" href="../student"><img src="../assets/icons/arrow-right-solid (dark).svg" id="back"  aria-hidden="true"></a>
                     <h1 id="title" title="Class View">Class View</h1>
                     <a title="Options"><img src="../assets/icons/gear.svg" id="options" aria-hidden="true"></a>
                 </div>
@@ -43,8 +44,6 @@
                     <nav id="navigation">
                         <a href="#about" id="about-link" class="nav-item">About</a>
                         <a href="#modules" id="modules-link" class="nav-item">Modules</a>
-                        <a href="#grades" id="grades-link" class="nav-item">Grades</a>
-                        <a href="#settings" id="settings-link" class="nav-item">Settings</a>
                     </nav>
                     <div id="scroll-container">
                         <section id="about">
@@ -60,56 +59,13 @@
                         </section>
                         <section id="modules">
                 
-                            <a id="add-module-btn" href="../teacher/lesson-editor" title="Create New Module with New Lesson"><img src="../assets/icons/plus-dark.svg" aria-hidden="true"></a>
                         </section>
-                        <section id="grades">
-                            Grades are WIP
-                        </section>
-                        <section id="settings">
-                            <h2 id="settings-title">Class Settings</h2>
-                            
-                            <form class="settings-form" id="update-form">
-                                <h3 class="form-title">Update Class Information</h3>
-                                <div class="input-column">
-                                    <div class="input-row">
-                                        <label id="class-name-update-label" for="class-name-update">Class Name</label>
-                                        <input maxlength="50"id="class-name-update" type="text" placeholder="Class Name">
-                                    </div>
-                                    <div class="input-row">
-                                        <label id="class-description-update-label" for="class-description-update">Class Description</label>
-                                        <input maxlength="200" id="class-description-update" type="text" placeholder="Class Description">
-                                    </div>
-                                    <button id="update-class-info" type="submit">Update</button>
-                                </div>
-                            </form>
-
-                            <div id="class-join-code">
-                                <h3 class="form-title">Class Join Link</h3>
-                                <div id="code-container">
-                                    <p id="code"></p>
-                                    <div id="copy-container">
-                                        <img id="copy-code" title="Copy Join Link" src="../assets/icons/copy.svg">
-                                        <div id="copy-popup">Copied!</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="students">
-                                <h3 class="form-title">Students</h3>
-                                <div id="student-container">
-                                    No students yet. Add them with the join link above!
-                                </div>
-                            </div>
-
-                            <button id="delete-class">
-                                Delete Class
-                            </button>
                         </section>
                     </div>
                 </div>
             </div>
         </main>
 
-        <script type="module" src="../js/classes.js"></script>
+        <script type="module" src="../js/student-classes.js"></script>
     </body>
 </html>

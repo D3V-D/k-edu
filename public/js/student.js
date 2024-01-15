@@ -1,34 +1,42 @@
-import { auth, onAuthStateChanged, signOut } from "./firebase.js";
-import { getUserRole } from "./userRoles.js";
+import { supabase } from "./supabase.js";
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        let role = getUserRole(user.uid).then((data)=>{
-            if (data.role == 'teacher') {
-                window.location = "../teacher"
-            } else if (data.role == 'student') {
-                document.getElementById("loading").style.display = "none";
-            }
-        })
-    } else {
-        window.location = "../login"
+let currentUser;
+const subscription = supabase.auth.onAuthStateChange((event, session) => {
+    let userRole;
+
+    if (session != null) {
+        userRole = session.user.user_metadata.role
+    }
+    
+    if (event === 'INITIAL_SESSION') {
+        if (session == null || (userRole != 'teacher' && userRole != 'student')) {
+            window.location.href = "../login";
+        } else if (userRole == 'teacher') {
+            window.location.href = "../teacher";
+        } else if (userRole == 'student') {
+            // handle initial session
+            currentUser = session.user
+            document.getElementById("loading").style.display = "none"
+        }
+    } else if (event === 'SIGNED_IN') {
+        console.log("Signed in.")
+        currentUser = session.user
+    } else if (event === 'SIGNED_OUT') {
+        window.location.href = "../login";
+    } else if (event === 'USER_UPDATED') {
+        console.log("User updated")
+        currentUser = session.user
+        if (session.user.user_metadata.role == 'teacher') {
+            window.location = "../teacher"
+        } else if (session.user.user_metadata.role != 'student') {
+            window.location = "../login"
+        }
     }
 })
 
-// in case of back button (doesn't auto reload the page)
-window.addEventListener('pageshow', function (event) {
-    if (event.persisted) {
-        window.location.reload();
-    }
-})
 
-document.getElementById("sign-out").addEventListener("click", signout);
+document.getElementById("logout").addEventListener("click", signout);
 
 async function signout() {
-    signOut(auth).then(() => {
-        console.log('Sign out successful')
-    }).catch((error) => {
-        console.error(error)
-        alert(error)
-    })
+    const { error } = await supabase.auth.signOut();
 }
