@@ -8,7 +8,7 @@
 
         <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://*.supabase.co wss://*.supabase.co https://*; img-src 'self' https://* data:; child-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net https://*; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline';"/>
+        content="default-src 'self' https://*.supabase.co wss://*.supabase.co https://*; img-src 'self' https://* data:; child-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net https://*; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com 'unsafe-inline';"/>
         
         <link href="../../css/template/base.css" rel="stylesheet">
         <link href="../../css/template/scrollbars.css" rel="stylesheet">
@@ -58,23 +58,18 @@
                     <div id="markdown-src" style="display: none;"></div>
                     <div id="markdown-render"></div>
                 </div>
-                <div id="border">
+                <!-- <div id="border">
 
-                </div>
+                </div> -->
                 <div id="editor">
                     <div id="editors">
                         <div class="code-editor" id="html-editor">
                         </div>
-                        
-                        <div id="css-resizer" class="editor-border">
-                        </div>
-
+    
                         <div class="code-editor" id="css-editor">
                         </div>
                         
-                        <div id="js-resizer" class="editor-border">
-                        </div>
-                        
+
                         <div class="code-editor" id="js-editor">
                         </div>
                     </div>

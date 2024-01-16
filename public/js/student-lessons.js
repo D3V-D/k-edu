@@ -1,6 +1,6 @@
 import { supabase } from "./supabase.js";
 import JSZip from 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm'
-
+import Split from 'https://cdn.jsdelivr.net/npm/split.js@1.6.5/+esm'
 // get class id from query params
 const urlParams = new URLSearchParams(window.location.search);
 const classId = urlParams.get('c');
@@ -77,10 +77,7 @@ async function setLessonFormat(lesson) {
         let iframeURL = window.location.origin + "/pdfjs/web/viewer.html?file=" + window.location.origin + "/.netlify/functions/cors-proxy?url=" + lesson.content
         document.getElementById("pdf-viewer").src = iframeURL
 
-        document.getElementById('border').style.minWidth = 1 + "px";
-        document.getElementById('border').style.border = "none"
-        document.getElementById('border').style.background = "var(--border-color)";
-        document.getElementById('border').style.cursor = "default";
+        setResizer()
 
         document.getElementById("markdown-render").style.display = "none";
     } else if (lesson.lesson_format == "markdown") {
@@ -134,41 +131,43 @@ async function setLessonFormat(lesson) {
 
 // resizing sections
 function setResizer() {
-    const lessonContainer = document.getElementById('lesson-container');
-    const lesson = document.getElementById('lesson');
-    const border = document.getElementById('border');
-    const editor = document.getElementById('editor');
-
-    let isResizing = false;
-
-    border.addEventListener('mousedown', (event) => {
-        isResizing = true;
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', () => {
-            isResizing = false;
-            document.removeEventListener('mousemove', handleMouseMove);
-        });
-        document.addEventListener('mouseleave', () => {
-            isResizing = false;
-            document.removeEventListener('mousemove', handleMouseMove);
-        })
-    });
-
-    function handleMouseMove(event) {
-        if (isResizing) {
-            const lessonWidth = event.clientX - lessonContainer.offsetLeft;
-            
-            const maxWidth = window.innerWidth - 50;
-        
-            lesson.style.minWidth = Math.min(lessonWidth, maxWidth) + 'px';
-        }
-    }
+    Split(["#lesson", "#editor"], {
+        sizes: [50, 50],
+        minSize: 20,
+        gutterSize: 20,
+    })
+    
 }
 
+
+// initialize editors
 async function initializeEditors(lesson) {
     if (lesson.lesson_type !== "project") {
         return
     }
+    
+    let editors = ["#html-editor", "#css-editor", "#js-editor"];
+
+    if (!lesson.html_enabled) {
+        document.getElementById("html-editor").style.display = "none";
+        editors = editors.filter(editor => editor !== "#html-editor");
+    }
+
+    if (!lesson.css_enabled) {
+        document.getElementById("css-editor").style.display = "none";
+        editors = editors.filter(editor => editor !== "#css-editor");
+    }
+
+    if (!lesson.js_enabled) {
+        document.getElementById("js-editor").style.display = "none";
+        editors = editors.filter(editor => editor !== "#js-editor");
+    }
+
+    Split(editors, {
+        minSize: 50,
+        gutterSize: 20,
+    });
+
 
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' }});
     window.MonacoEnvironment = { getWorkerUrl: () => proxy };
@@ -221,7 +220,16 @@ async function initializeEditors(lesson) {
         window.jsEditor.onDidChangeModelContent(() => {
             updateIframe()
         })
+        
     });
+
+    Split(["#editors", "#output"],
+        {
+            direction: "vertical",
+            sizes: [50, 50],
+            minSize: 100,
+            gutterSize: 20,
+        })
 
     // add download files button
     const downloadImg = document.createElement('img')

@@ -6,8 +6,7 @@ Minor:
 Major:
 [] Student landing page
 [] Edit lesson page
-[] Lesson pages
-[X] Student view of classes
-[] Code editor 
-[X] Make join class link work
 [] Make quizzes/tests
+
+Known bugs: 
+[] Projects do not yet account for editor settings

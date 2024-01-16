@@ -362,13 +362,6 @@ async function handleLessonCreation(e) {
 
     const lessonFormat = document.getElementById("lesson-format").value
 
-    if (lessonFormat == "pdf" && lessonType == "project") {
-        let confirmAgain = confirm("PDF projects have restrictions on resizing in the editor. Are you sure you want to create this lesson?")
-        if (!confirmAgain) {
-            return
-        }
-    }
-
     if (lessonType == "project" && !(htmlEnabled || cssEnabled || jsEnabled)) {
         alert("Project lessons require at least one language to be enabled.")
         return
