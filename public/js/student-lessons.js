@@ -204,7 +204,7 @@ async function initializeEditors(lesson) {
             value: [
                 ''
             ].join('\n'),
-            language: 'js',
+            language: 'javascript',
             theme: getColorScheme() == "dark" ? 'vs-dark' : 'vs',
         automaticLayout: true
         });
