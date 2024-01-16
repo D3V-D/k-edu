@@ -79,12 +79,6 @@ document.getElementById("lesson-name").addEventListener("input", () => {
     document.getElementById("lesson-name-label").innerHTML = `Lesson Name (${document.getElementById("lesson-name").value.length}/50)`
 })
 
-document.getElementById("pdf-additional-text-label").innerHTML = `Additional Information (${document.getElementById("pdf-additional-text").value.length}/1500)`
-
-document.getElementById("pdf-additional-text").addEventListener("input", () => {
-    document.getElementById("pdf-additional-text-label").innerHTML = `Additional Information (${document.getElementById("pdf-additional-text").value.length}/1500)`
-})
-
 document.getElementById("module-name-label").innerHTML = `Module Name (${document.getElementById("module-name").value.length}/50)`
 
 document.getElementById("module-name").addEventListener("input", () => {
@@ -215,19 +209,15 @@ function showCorrectEditor() {
         document.getElementById("pdf-url").required = true
         // show pdf viewer
         document.getElementById("pdf-viewer").style.display = "flex";
-        document.getElementById("pdf-additional-text").disabled = false
-        document.getElementById("pdf-additional").style.display = "flex"
         updatePDFViewer()
     }
     
     if (lessonFormat === "markdown") {
         // show markdown editor
-        document.getElementById("pdf-additional").style.display = "none"
         document.getElementById("pdf-viewer").style.display = "none";
         document.getElementById("markdown-editor-container").style.display = "flex";
         document.getElementById("pdf-url").disabled = true;
         document.getElementById("pdf-url").required = false
-        document.getElementById("pdf-additional-text").disabled = true
     }
 }
 
@@ -369,15 +359,28 @@ async function handleLessonCreation(e) {
     const locked = document.getElementById("lock").checked
     const unlockDate = document.getElementById("unlock-date").value
     const unlockTime = document.getElementById("unlock-time").value
-    
+
     const lessonFormat = document.getElementById("lesson-format").value
+
+    if (lessonFormat == "pdf" && lessonType == "project") {
+        let confirmAgain = confirm("PDF projects have restrictions on resizing in the editor. Are you sure you want to create this lesson?")
+        if (!confirmAgain) {
+            return
+        }
+    }
+
+    if (lessonType == "project" && !(htmlEnabled || cssEnabled || jsEnabled)) {
+        alert("Project lessons require at least one language to be enabled.")
+        return
+    }
+
+
     let contents = ""
     let addtionalTextForPDF = ""
     if (lessonFormat == "markdown") {
         contents = easyMDE.value()
     } else {
         contents = document.getElementById("pdf-url").value
-        addtionalTextForPDF = document.getElementById("pdf-additional-text").value
     }
 
     let createOrAddToModule = document.getElementById("module").value
@@ -463,12 +466,6 @@ async function handleLessonCreation(e) {
         // add data to object
         insertData = Object.assign({
             unlock_date: unlockDateTime.toISOString(),
-        }, insertData)
-    }
-
-    if (addtionalTextForPDF != "") {
-        insertData = Object.assign({
-            pdf_extras: addtionalTextForPDF
         }, insertData)
     }
 

@@ -51,12 +51,17 @@
 
 [[redirects]]
     from = "/teacher/classes/lessons"
-    to = "/teacher/lessons.html"
+    to = "/teacher/lesson-editor"
     status = 200
 
 [[redirects]]
     from = "/join-class"
     to = "/join-class.html"
+    status = 200
+
+[[redirects]]
+    from = "/student/classes/lessons"
+    to = "/student/lessons.html"
     status = 200
 
 [functions]

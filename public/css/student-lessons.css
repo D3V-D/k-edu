@@ -1,0 +1,170 @@
+body {
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    font-family: 'Urbanist', sans-serif;
+}
+
+#page {
+    height: 100vh;
+    width: 100vw;
+}
+
+#topbar {
+    background-color: var(--muted-bg-color);
+    height: clamp(50px, 6vh, 100px);
+    min-height: fit-content;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: solid 1px var(--border-color);
+}
+
+#back {
+    filter: var(--invert);
+    -webkit-filter: var(--invert);
+    rotate: 180deg;
+    width: 20px;
+}
+
+#title {
+    font-weight: 800;
+}
+
+#button-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.download {
+    filter: var(--invert);
+    -webkit-filter: var(--invert);
+    width: 20px;
+}
+
+#download-link {
+    cursor: pointer;
+}
+
+#submit {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    border: solid 2px transparent;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#submit:hover {
+    filter: brightness(1.2);
+    -webkit-filter: brightness(1.2);
+    border: solid 2px var(--accent-color);
+    box-shadow: 0 0 5px var(--accent-color);
+}
+
+#lesson-container {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 100%;
+}
+
+#lesson {
+    padding: 20px;
+    padding-bottom: 60px;
+    overflow-y: auto;
+    position: relative;
+    min-width: 50%;
+    height: 100%;
+    background-color: white;
+    color: #222;
+}
+
+#editor {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#editors {
+    border-bottom: solid 1px var(--border-color);
+    min-height: 50%;
+    display: flex;
+    flex-direction: row;
+}
+
+#output {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border: none;
+}
+
+.code-editor {
+    position: relative;
+    background-color: var(--muted-bg-color);
+    min-width: 100px;
+    width: 33%;
+    height: 100%;
+    border-right: solid 1px var(--border-color);
+}
+
+.editor-border {
+    min-width: 20px;
+    background-color: var(--muted-bg-color);
+    cursor: ew-resize;
+}
+
+.code-editor::after {
+    position: absolute;
+    top: 10%;
+    right: calc(100% - 7px);
+    rotate: 270deg;
+    font-family: monospace;
+    font-weight: 800;
+    padding: 4px;
+    max-height: 20px;
+    color: var(--fg-color);
+    z-index: 99;
+}
+
+#html-editor::after {
+    content: "HTML";
+    background-color: rgb(231, 173, 87);
+    right: calc(100% - 10px);
+}
+
+#css-editor::after {
+    content: "CSS";
+    background-color: rgb(84, 197, 182);
+}
+
+#js-editor::after {
+    content: "JS";
+    background-color: rgb(44, 155, 22);
+    right: calc(100% - 1px);
+}
+
+#border {
+    background-color: var(--muted-bg-color);
+    min-width: 20px;
+    height: 100%;
+    border-left: solid 1px var(--border-color);
+    border-right: solid 1px var(--border-color);
+    cursor: col-resize;
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#pdf-viewer {
+    width: 100%;
+    height: 100%;
+}

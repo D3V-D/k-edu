@@ -94,7 +94,7 @@
                         <label id="lesson-type-label" for="lesson-type">Lesson Type</label>
                         <select title="Lesson Type" class="select-input" required id="lesson-type" name="lesson-type">
                             <option value="info">Informative Lesson</option>
-                            <option value="quiz">Quiz or Test</option>
+                            <option value="quiz" disabled title="Coming Soon">Quiz or Test</option>
                             <option value="project">Project</option>
                         </select>
                     </div>
@@ -141,11 +141,6 @@
 
                     <iframe id="pdf-viewer" title="PDF Viewer; Preview student view" src="">      
                     </iframe>
-                    
-                    <div class="input-container" id="pdf-additional">
-                        <label id="pdf-additional-text-label" for="pdf-additional-text">Additional Information</label>
-                        <textarea maxlength="1500" id="pdf-additional-text" name="pdf-additional-text" placeholder="Additional information about this lesson"></textarea>
-                    </div>
 
                     <div id="markdown-editor-container">
                         <label id="markdown-label" for="markdown">Markdown</label>

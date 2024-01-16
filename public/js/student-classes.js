@@ -32,7 +32,7 @@ const subscription = supabase.auth.onAuthStateChange((event, session) => {
         console.log("User updated")
         currentUser = session.user
         if (session.user.user_metadata.role == 'teacher') {
-            window.location = "../teacher"
+            window.location = "../teacher/classes?c=" + classId
         } else if (session.user.user_metadata.role != 'student') {
             window.location = "../login"
         }
@@ -76,7 +76,7 @@ async function setClassData() {
     document.getElementById('class-name').innerText = class_name
     document.getElementById('class-description').innerText = class_desc
     document.getElementById('title').title = class_desc
-    document.title = class_name + "| K-Edu | Teacher View"
+    document.title = class_name + " | K-Edu"
 
     // get teacher
     const teacherRes = await supabase
@@ -222,7 +222,7 @@ async function addLessonToModule(lesson, lessonsContainer) {
     const lessonItem = document.createElement('a')
     lessonItem.classList.add("lesson")
     lessonItem.id = lesson.id
-    lessonItem.href = `class/lesson?c=${classId}&l=${lesson.id}`
+    lessonItem.href = `classes/lessons?c=${classId}&l=${lesson.id}`
     lessonItem.title = lesson.lesson_name
 
     const lessonTitle = document.createElement('h4')
@@ -298,7 +298,7 @@ const classUpdated = supabase.channel("class-update").on("postgres_changes",
             document.getElementById('title').innerText = updatedClass.class_name
             document.getElementById('class-name').innerText = updatedClass.class_name
             document.getElementById('class-name-update').value = updatedClass.class_name            
-            document.title = updatedClass.class_name + "| K-Edu | Teacher View"
+            document.title = updatedClass.class_name + " | K-Edu"
         }
 
         if (payload.old.description !== updatedClass.description) {

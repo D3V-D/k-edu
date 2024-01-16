@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lesson View | K-Edu</title>
+
+        <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self' https://*.supabase.co wss://*.supabase.co https://*; img-src 'self' https://* data:; child-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net; font-src https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net https://*; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline';"/>
+        
+        <link href="../../css/template/base.css" rel="stylesheet">
+        <link href="../../css/template/scrollbars.css" rel="stylesheet">
+        <link href="../../css/template/noscript.css" rel="stylesheet">
+        <link href="../../css/template/loader.css" rel="stylesheet">
+        <link href="../../css/student-lessons.css" rel="stylesheet">
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+
+        <!-- Markdown editor -->
+        <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css"
+        />
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="../../assets/imgs/favicon_io/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../assets/imgs/favicon_io/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../assets/imgs/favicon_io/favicon-16x16.png">
+        <link rel="manifest" href="../../assets/imgs/favicon_io/site.webmanifest">
+    </head>
+    <body>
+        <noscript>
+            <h1>You have javascript disabled, or your browser does not support it.</h1>
+        </noscript>
+
+        <div id="loading">
+            <img id="loader" src="../../assets/imgs/bouncing-loader.svg">
+            Loading...
+        </div>
+
+        <main id="page">
+            <div id="topbar">
+                <a id="back-link">
+                    <img id="back" src="../../assets/icons/arrow-right-solid (dark).svg" alt="back">
+                </a>
+                <h1 id="title">Lesson View</h1>
+                <div id="button-row">
+                    <button id="submit" title="Submit">
+                        Submit
+                    </button>
+                </div>
+            </div>
+            <div id="lesson-container">
+                <div id="lesson">
+                    <!-- Either PDF or Markdown -->
+                    <iframe id="pdf-viewer" src="" title="Lesson"></iframe>
+                    <div id="markdown-src" style="display: none;"></div>
+                    <div id="markdown-render"></div>
+                </div>
+                <div id="border">
+
+                </div>
+                <div id="editor">
+                    <div id="editors">
+                        <div class="code-editor" id="html-editor">
+                        </div>
+                        
+                        <div id="css-resizer" class="editor-border">
+                        </div>
+
+                        <div class="code-editor" id="css-editor">
+                        </div>
+                        
+                        <div id="js-resizer" class="editor-border">
+                        </div>
+                        
+                        <div class="code-editor" id="js-editor">
+                        </div>
+                    </div>
+                    <iframe id="output" sandbox="allow-scripts" src="">
+                        
+                    </iframe>
+                </div>
+            </div>
+        </main>
+
+
+        <!-- Markdown editor -->
+        <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+        <!-- Monaco editor -->
+        <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+        <script type="module" src="../../js/student-lessons.js"></script>
+    </body>
+</html>
