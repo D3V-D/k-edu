@@ -103,7 +103,6 @@ async function setLessonFormat(lesson) {
     }
 
     if (lesson.lesson_type == "info") {
-        document.getElementById("border").style.display = "none";
         document.getElementById("editor").style.display = "none";
         document.getElementById("lesson").style.minWidth = "100%"
         document.getElementById("submit").style.opacity = "0";
