@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Lesson View | K-Edu</title>
+        <title>Submission View | K-Edu</title>
 
         <meta
         http-equiv="Content-Security-Policy"
@@ -15,6 +15,7 @@
         <link href="../../css/template/noscript.css" rel="stylesheet">
         <link href="../../css/template/loader.css" rel="stylesheet">
         <link href="../../css/student-lessons.css" rel="stylesheet">
+        <link href="../../css/submissions.css" rel="stylesheet">
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
 
@@ -52,13 +53,13 @@
         <main id="page">
             <div id="topbar">
                 <a id="back-link">
-                    <img id="back" src="../../assets/icons/arrow-right-solid (dark).svg" alt="back">
+                    <img title="Back to Class" id="back" src="../../assets/icons/arrow-right-solid (dark).svg" alt="back">
                 </a>
                 <h1 id="title">Lesson View</h1>
                 <div id="button-row">
-                    <button id="submit" title="Submit">
-                        Submit
-                    </button>
+                    <select id="choose-student" title="choose-student">
+                        <option value="no-student">No Student Submissions Yet</option>
+                    </select>
                 </div>
             </div>
             <div id="lesson-container">
@@ -87,11 +88,10 @@
             </div>
         </main>
 
-
         <!-- Markdown editor -->
         <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
         <!-- Monaco editor -->
         <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
-        <script type="module" src="../../js/student-lessons.js"></script>
+        <script type="module" src="../../js/submissions.js"></script>
     </body>
 </html>

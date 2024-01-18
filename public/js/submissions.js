@@ -8,7 +8,7 @@ const lessonId = urlParams.get('l');
 
 let lessonName;
 
-document.getElementById("back-link").href = "../classes?c=" + classId
+document.getElementById("back-link").href = "../teacher/classes?c=" + classId
 
 let currentUser;
 const subscription = supabase.auth.onAuthStateChange((event, session) => {
@@ -21,9 +21,9 @@ const subscription = supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'INITIAL_SESSION') {
         if (session == null || (userRole != 'teacher' && userRole != 'student')) {
             window.location = "../../login";
-        } else if (userRole == 'teacher') {
-            window.location = "../../teacher/lesson-editor?c=" + classId + "&l=" + lessonId
         } else if (userRole == 'student') {
+            window.location = "../../student/classes/lessons?c=" + classId + "&l=" + lessonId
+        } else if (userRole == 'teacher') {
             // handle initial session
             currentUser = session.user
             initPage()
@@ -36,9 +36,9 @@ const subscription = supabase.auth.onAuthStateChange((event, session) => {
     } else if (event === 'USER_UPDATED') {
         console.log("User updated")
         currentUser = session.user
-        if (session.user.user_metadata.role == 'teacher') {
-            window.location = "../../teacher/lesson-editor?c=" + classId + "&l=" + lessonId
-        } else if (session.user.user_metadata.role != 'student') {
+        if (session.user.user_metadata.role == 'student') {
+            window.location = "../../student/classes/lessons?c=" + classId + "&l=" + lessonId
+        } else if (session.user.user_metadata.role != 'teacher') {
             window.location = "../../login"
         }
     }
@@ -57,27 +57,76 @@ async function initPage() {
         return
     }
 
-    // if locked, redirect to class
-    if (currentLesson.data.locked) {
-        alert("Lesson is locked.")
-        window.location.href = "../classes?c=" + classId
-        return
-    }
-
-    // if already submitted, redirect to edit
-    await checkIfAlreadySubmitted(currentLesson.data)
-
     lessonName = currentLesson.data.lesson_name
 
     await setLessonFormat(currentLesson.data)
-    await setLessonData(currentLesson.data)
     await initializeEditors(currentLesson.data)
+    await setLessonData(currentLesson.data)
 
     document.getElementById("loading").style.display = "none"
 }
 
 async function setLessonData(lesson) {
-    document.getElementById("title").innerText = lesson.lesson_name
+    document.getElementById("title").innerText = lesson.lesson_name + " (Submission View)"
+
+    // set students
+    await setStudents()
+}
+
+async function setStudents() {
+    // create option for each student
+    const resp = await supabase
+        .from('submissions')
+        .select('student_uid, student_name')
+        .eq('lesson_id', lessonId)
+
+    if (resp.error) {
+        console.error(resp.error)
+        showModal("Error in loading students. Check the console for more info.")
+        return
+    }
+
+    if (resp.data.length == 0) {
+        return
+    }
+
+    // first empty out all options
+    document.getElementById("choose-student").innerHTML = ""
+    for (let i = 0; i < resp.data.length; i++) {
+        const option = document.createElement("option")
+        option.value = resp.data[i].student_uid
+        option.text = resp.data[i].student_name
+        document.getElementById("choose-student").appendChild(option)
+    }
+
+    await retrieveSubmission(document.getElementById("choose-student").value)
+
+    document.getElementById("choose-student").addEventListener("change", async () => {
+        await retrieveSubmission(document.getElementById("choose-student").value)
+    })
+}
+
+async function retrieveSubmission(studentId) {
+    const resp = await supabase
+        .from('submissions')
+        .select()
+        .eq('lesson_id', lessonId)
+        .eq('student_uid', studentId)
+
+    if (resp.error) {
+        console.error(resp.error)
+        showModal("Error in loading submission. Check the console for more info.")
+        return
+    }
+
+    if (resp.data.length == 0) {
+        return
+    }
+
+    // update editors
+    window.htmlEditor.setValue(resp.data[0].htmlContent)
+    window.cssEditor.setValue(resp.data[0].cssContent)
+    window.jsEditor.setValue(resp.data[0].jsContent)
 }
 
 async function setLessonFormat(lesson) {
@@ -115,8 +164,6 @@ async function setLessonFormat(lesson) {
     if (lesson.lesson_type == "info") {
         document.getElementById("editor").style.display = "none";
         document.getElementById("lesson").style.minWidth = "100%"
-        document.getElementById("submit").style.opacity = "0";
-        document.getElementById("submit").style.pointerEvents = "none";
     } 
     /** TODO: ADD QUIZZES */
 }
@@ -181,7 +228,8 @@ async function initializeEditors(lesson) {
             ].join('\n'),
             language: 'html',
             theme: getColorScheme() == "dark" ? 'vs-dark' : 'vs',
-        automaticLayout: true
+            automaticLayout: true,
+            readOnly: true
         });
 
         window.cssEditor = await monaco.editor.create(document.getElementById('css-editor'), {
@@ -190,7 +238,8 @@ async function initializeEditors(lesson) {
             ].join('\n'),
             language: 'css',
             theme: getColorScheme() == "dark" ? 'vs-dark' : 'vs',
-        automaticLayout: true
+            automaticLayout: true,
+            readOnly: true
         });
 
         window.jsEditor = await monaco.editor.create(document.getElementById('js-editor'), {
@@ -199,7 +248,8 @@ async function initializeEditors(lesson) {
             ].join('\n'),
             language: 'javascript',
             theme: getColorScheme() == "dark" ? 'vs-dark' : 'vs',
-        automaticLayout: true
+            automaticLayout: true,
+            readOnly: true
         });
 
         window.htmlEditor.onDidChangeModelContent(() => {
@@ -214,11 +264,7 @@ async function initializeEditors(lesson) {
             updateIframe()
         })
 
-        if (window.alreadySubmitted) {
-            window.htmlEditor.setValue(window.storedHTMLValue)
-            window.cssEditor.setValue(window.storedCSSValue)
-            window.jsEditor.setValue(window.storedJSValue)
-        }
+        
     });
 
     Split(["#editors", "#output"],
@@ -317,91 +363,6 @@ function updateIframe() {
     iframe.srcdoc = combinedCode
 }
 
-// submission logic
-document.getElementById("submit").addEventListener("click", async (e) => {
-    e.preventDefault();
-
-    const html = window.htmlEditor.getValue();
-    const css = window.cssEditor.getValue();
-    const js = window.jsEditor.getValue();
-
-    // TODO: Add quiz functionality
-    if (window.alreadySubmitted) {
-        editSubmission(html, css, js)
-    } else {
-        createSubmission(html, css, js)
-    }
-})
-
-async function editSubmission(html, css, js) {
-    let timestampz = new Date()
-    timestampz = timestampz.toISOString()
-
-    const resp = await supabase
-        .from('submissions')
-        .update({
-            htmlContent: html,
-            cssContent: css,
-            jsContent: js,
-            updated_at: timestampz,
-        })
-        .eq('lesson_id', lessonId)
-        .eq('student_uid', currentUser.id)
-
-    if (resp.error) {
-        console.error(resp.error)
-        showModal("Error in editing. Check console for more info.")
-        return
-    }
-
-    showModal("Submission successfully updated.")
-}
-
-async function createSubmission(html, css, js) {
-    const resp = await supabase
-    .from('submissions')
-    .insert({
-        class_id: classId,
-        lesson_id: lessonId,
-        student_uid: currentUser.id,
-        htmlContent: html,
-        cssContent: css,
-        jsContent: js,
-        student_name: currentUser.user_metadata.name
-    })
-
-    if (resp.error) {
-        console.error(resp.error)
-        showModal("Error in submitting. Check console for more info.")
-        return
-    }
-
-    showModal("Submission successful!", () => {
-        window.location.href = "../classes?c=" + classId
-    })
-}
-
-async function checkIfAlreadySubmitted(lesson) {
-    const resp = await supabase
-        .from('submissions')
-        .select()
-        .eq('lesson_id', lesson.id)
-        .eq('student_uid', currentUser.id)
-    
-    if (resp.error) {
-        console.error(resp.error)
-        showModal("Error in checking if already submitted. Check console for more info.")
-        return
-    }
-
-    if (resp.data.length > 0) {
-        document.getElementById("submit").innerText = "Edit Submission"
-        window.alreadySubmitted = true
-        window.storedHTMLValue = resp.data[0].htmlContent
-        window.storedCSSValue = resp.data[0].cssContent
-        window.storedJSValue = resp.data[0].jsContent
-    }
-}
 
 function showModal(message, callback) {
     document.getElementById("modal-container").style.display = "flex"

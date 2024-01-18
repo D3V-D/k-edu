@@ -36,3 +36,10 @@
 body, html {
     overflow: hidden;
 }
+
+blockquote {
+    margin: 0;
+    padding-left: 10px;
+    border-left: solid 5px #7a7a7a;
+    margin-block: 8px;
+}

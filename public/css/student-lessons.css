@@ -33,6 +33,10 @@ body {
 
 #title {
     font-weight: 800;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-inline: 10px;
 }
 
 #button-row {
@@ -114,9 +118,14 @@ body {
 
 .gutter {
     min-width: 20px;
+    cursor: col-resize;
     background-color: var(--muted-bg-color);
     border-right: solid 1px var(--border-color);
     border-left: solid 1px var(--border-color);
+}
+
+.gutter-vertical {
+    cursor: row-resize;
 }
 
 .code-editor::after {
@@ -149,23 +158,54 @@ body {
     right: calc(100% - 1px);
 }
 
-#border {
-    background-color: var(--muted-bg-color);
-    min-width: 20px;
-    height: 100%;
-    border-left: solid 1px var(--border-color);
-    border-right: solid 1px var(--border-color);
-    cursor: col-resize;
-    user-select: none;
-    -webkit-user-drag: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
 #pdf-viewer {
     width: 100%;
     height: 100%;
+}
+
+#modal-container {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+#modal {
+    background-color: var(--muted-bg-color);
+    border: solid 1px var(--border-color);
+    border-radius: 5px;
+    padding: 10px;
+    width: clamp(300px, 40vw, 500px);
+    aspect-ratio: 3/1;
+}
+
+#modal-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;    
+}
+
+#modal-text {
+    text-align: center;
+    font-size: clamp(14px, 1.5vw, 18px);
+}
+
+#modal-close {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    cursor: pointer;
+    padding: 3px;
+    filter: var(--invert);
 }

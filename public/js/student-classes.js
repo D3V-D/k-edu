@@ -271,6 +271,13 @@ async function addLessonToModule(lesson, lessonsContainer) {
         }
     }
 
+    // also, don't have href url if locked
+    if (lesson.locked) {
+        lessonItem.href = "#"
+        lessonItem.title += " (Locked)"
+        lessonItem.classList.add("locked")
+    }
+
     lessonInfo.append(lessonType, lessonPoints, lock)
     lessonItem.append(lessonTitle, lessonInfo)
     lessonsContainer.append(lessonItem)

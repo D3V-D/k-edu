@@ -55,6 +55,11 @@
     status = 200
 
 [[redirects]]
+    from = "/teacher/submissions"
+    to = "/teacher/submissions.html"
+    status = 200
+
+[[redirects]]
     from = "/join-class"
     to = "/join-class.html"
     status = 200

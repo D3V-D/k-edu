@@ -37,6 +37,10 @@
 
 #title {
     font-size: calc(var(--square-side-length) / 4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-inline: 10px;
 }
 
 #container {
@@ -227,7 +231,6 @@ section {
     align-items: center;
     background-color: var(--muted-bg-color);
     border: dashed 1px var(--border-color);
-    padding-block: 10px;
 }
 
 .add-lesson-icon {
@@ -272,54 +275,6 @@ section {
     padding: 5px;
 }
 
-.lesson-options {
-    filter: var(--invert);
-    -webkit-filter: var(--invert);
-    padding: 10px;
-}
-
-.lesson-options:hover {
-    background-color: var(--accent-color);
-    border-radius: 10px;
-}
-
-.options-title {
-    width: 100%;
-    padding: 10px;
-    cursor: default;
-    border-bottom: solid 1px var(--border-color);
-}
-
-.options-menu {
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    transform: translateY(-50%);
-    background-color: var(--muted-bg-color);
-    border-radius: 5px;
-    border: solid 1px var(--border-color);
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    width: max-content;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding-bottom: 10px;
-}
-
-.option {
-    padding-inline: 10px;
-    padding-block: 5px;
-    width: 100%;
-    color: inherit;
-    text-decoration: none;
-}
-
-.option:hover {
-    background-color: var(--accent-color);
-    color: var(--bg-color);
-}
 
 #grades {
     display: flex;
@@ -416,6 +371,49 @@ button[type="submit"]:hover {
     background-color: var(--bg-color);
     color: var(--accent-color);
     box-shadow: 0 0 4px var(--accent-color);
+}
+
+.lesson-title-and-move {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+}
+
+.move {
+    width: 12px;
+}
+
+.option-img,
+.move-img {
+    filter: var(--invert);
+    -webkit-filter: var(-invert);
+    width: 100%;
+}
+
+.option {
+    width: 25px;
+    padding: 2px;
+    margin-right: 4px;
+}
+
+.delete-img {
+    width: 100%;
+}
+
+.lesson-del {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(250, 89, 89);
+    border-radius: 5px;
+    width: 25px;
+}
+
+.edit-img {
+    filter: var(--invert);
+    -webkit-filter: var(-invert);
 }
 
 #code {

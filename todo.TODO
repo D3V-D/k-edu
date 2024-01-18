@@ -6,6 +6,3 @@ Minor:
 Major:
 [] Page for editing lessons
 [] Make quizzes/tests
-[] Submission ability
-[] teachers see submissions when clicking on lesson
-    => only redirect to editor if explicitly clicked edit lesson

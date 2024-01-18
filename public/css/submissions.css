@@ -1,0 +1,13 @@
+#choose-student {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    max-height: 40px;
+    background-color: var(--bg-color);
+    border: solid 1px var(--border-color);
+    border-radius: 2px;
+    cursor: pointer;
+    color: var(--fg-color);
+}

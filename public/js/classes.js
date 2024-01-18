@@ -344,7 +344,7 @@ async function addLessonToModule(lesson, lessonsContainer) {
     const lessonItem = document.createElement('a')
     lessonItem.classList.add("lesson")
     lessonItem.id = lesson.id
-    lessonItem.href = `../teacher/lesson-editor?c=${classId}&l=${lesson.id}`
+    lessonItem.href = `../teacher/submissions?c=${classId}&l=${lesson.id}`
     lessonItem.title = lesson.lesson_name
 
     const lessonTitle = document.createElement('h4')
@@ -388,48 +388,52 @@ async function addLessonToModule(lesson, lessonsContainer) {
         }
     }
 
+    const move = document.createElement('span')
+    move.classList.add("move")
+    move.title = "Move Lesson"
 
-    const options = document.createElement('img')
-    options.classList.add("lesson-options")
-    options.src = "../assets/icons/vertical-dots.svg"
-    options.title = "Options"
-    options.addEventListener("click", (e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        showOptions(e)
-    })
+    const moveImg = document.createElement('img')
+    moveImg.classList.add("move-img")
+    moveImg.alt = "Move Lesson"
+    moveImg.src = "../assets/icons/grips.svg"
+    move.appendChild(moveImg)
 
-    const optionsMenu = document.createElement('div')
-    optionsMenu.classList.add("options-menu")
-    
-    const optionsTitle = document.createElement('span')
-    optionsTitle.classList.add("options-title")
-    optionsTitle.innerText = "Options"
-    optionsMenu.append(optionsTitle)
+    const deleteBtn = document.createElement('btn')
+    deleteBtn.classList.add("option")
+    deleteBtn.classList.add("lesson-del")
+    deleteBtn.style.backgroundColor = "rgb(250, 89, 89)"
+    deleteBtn.title = "Delete Lesson"
 
-    const optionMove = document.createElement('span')
-    optionMove.classList.add("option")
-    optionMove.innerText = "Move Lesson"
-
-    const optionDelete = document.createElement('span')
-    optionDelete.classList.add("option")
-    optionDelete.innerText = "Delete Lesson"
-    optionDelete.addEventListener("click", async (e) => {
+    deleteBtn.addEventListener("click", async (e) => {
         e.stopPropagation()
         e.preventDefault()
         await deleteLesson(lesson.id)
-    })
+    }) 
+    
+    const deleteImg = document.createElement('img')
+    deleteImg.classList.add("delete-img")
+    deleteImg.src = "../assets/icons/delete (dark).svg"
+    deleteImg.alt = "Delete Lesson"
+    deleteBtn.appendChild(deleteImg)
 
-    const optionEdit = document.createElement('a')
-    optionEdit.classList.add("option")
-    optionEdit.innerText = "Edit Lesson"
-    optionEdit.href = `../teacher/lesson-editor`
+    const edit = document.createElement('a')
+    edit.title = "Edit Lesson"
+    edit.classList.add("option")
+    edit.href = `../teacher/lesson-editor?c=${classId}&l=${lesson.id}`
 
-    optionsMenu.append(optionMove, optionDelete, optionEdit)
+    const editImg = document.createElement('img')
+    editImg.classList.add("edit-img")
+    editImg.src = "../assets/icons/pencil.svg"
+    editImg.alt = "Edit Lesson"
+    edit.appendChild(editImg)
 
+    // have title & move icon in same section
+    const lessonTitleAndMove = document.createElement('div')
+    lessonTitleAndMove.classList.add("lesson-title-and-move")
+    lessonTitleAndMove.append(move, lessonTitle)
 
-    lessonInfo.append(lessonType, lessonPoints, lock, options, optionsMenu)
-    lessonItem.append(lessonTitle, lessonInfo)
+    lessonInfo.append(lessonType, lessonPoints, lock, edit, deleteBtn)
+    lessonItem.append(lessonTitleAndMove, lessonInfo)
     lessonsContainer.append(lessonItem)
 }
 
@@ -448,6 +452,13 @@ function showOptions(e) {
 }
 
 async function deleteLesson(lessonId) {
+
+    const confirm = window.confirm("Are you sure you want to delete this lesson?")
+
+    if (!confirm) {
+        return
+    }
+
     const { error } = await supabase.from("lessons")
         .delete()
         .eq("id", lessonId)
