@@ -4,7 +4,8 @@ Minor:
 [] Specific module creation page
 
 Major:
-[] Student landing page
-[] Edit lesson page
+[] Page for editing lessons
 [] Make quizzes/tests
 [] Submission ability
+[] teachers see submissions when clicking on lesson
+    => only redirect to editor if explicitly clicked edit lesson
