@@ -9,6 +9,11 @@
         content="default-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' https://*; child-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://cdn.jsdelivr.net;"/>
         <title>Student Dashboard</title>
 
+        <meta name="theme-color" content="#08c092"/>
+
+        <link href="css/template/homepage-template.css" rel="stylesheet">
+        <link href="css/template/base.css" rel="stylesheet">
+        <link href="css/template/scrollbars.css" rel="stylesheet">
         <link href="css/template/noscript.css" rel="stylesheet">
         <link href="css/template/loader.css" rel="stylesheet">
         <link href="css/student.css" rel="stylesheet">
@@ -31,14 +36,65 @@
             <h1>You have javascript disabled, or your browser does not support it.</h1>
         </noscript>
 
-        <h1>
-            Welcome, Student.
-        </h1>
-        <button id="logout">
-            Sign Out
-        </button>
+        <nav id="sidebar">
+            <div id="link-holder">
+                <a href="#" title="Dashboard" alt="Dashboard" class="current-page"><img src="assets/imgs/teacher/dashboard (dark).svg"></a>
+            </div>
+        </nav>
+
+        <div id="modal-container">
+            <div id="modal">
+                <div id="modal-content">
+                    <img src="assets/icons/arrow-right-solid (dark).svg" aria-hidden="true" id="modal-close">
+                    <p id="modal-text">
+                        Ask your teacher for a join link to join a class!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <main id="content">
+            <div id="top-bar" class="row">
+                <div id="search-container">
+                    <input autocomplete="off" title="Search" type="search" id="search" placeholder="Search">
+                    <div id="search-results">
+                        Type and hit enter to search.
+                    </div>
+                </div>
+
+                <div id="profile" title="Profile">
+                    <img id="profile-img" alt="Profile Picture" src="assets/imgs/profile.svg">
+                    <div id="profile-dropdown">
+                        <div class="profile-dropdown-section">
+                            <a href="#" title="Settings" class="profile-dropdown-option">Settings</a>
+                            <a href="#" title="Themes" class="profile-dropdown-option">Themes</a>
+                        </div>
+                        <span class="divider"></span>
+                        <div class="profile-dropdown-section">
+                            <a href="#" title="Help" class="profile-dropdown-option">Help</a>
+                            <a href="mailto:k-edu@googlegroups.com" title="Contact" class="profile-dropdown-option">Contact</a>
+                            <a id="logout" title="Logout" class="profile-dropdown-option">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="title-holder">
+                <h1 id="welcome">
+                    Welcome, Student.
+                </h1>
+            </div>
+
+            <h2 class="section-header" title="See All Classes">Classes <div class="stem"></div></h2>
+            <div class="row scroll-x" id="classes-holder">
+                <button id="add-class" title="Add Class">
+                    <img src="assets/icons/plus-dark.svg">
+                </button>
+                <div id="classes">
+                </div>
+            </div>
+        </main>
 
         <script type="module" src="js/student.js"></script>
-        <script src="js/lesson-renderer.js"></script>
     </body>
 </html>

@@ -219,6 +219,7 @@ document.getElementById("search").addEventListener("keydown", async (e) => {
                 description
                `
             )
+            .eq("teacher_uid", currentUser.id)
             .textSearch('name_description', query, {
                 type: 'websearch',
                 config: 'english'

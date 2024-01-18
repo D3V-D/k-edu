@@ -40,11 +40,10 @@ const subscription = supabase.auth.onAuthStateChange((event, session) => {
 })
 
 async function setClassData() {
-    // first, check if teacher is in the class
-    // if not, show error
+    // get class data
     let { data, error } = await supabase
                             .from('classes')
-                            .select('class_name, students, description, teacher_uid, class_join_id')
+                            .select('class_name, students, description, teacher_uid')
                             .eq('id', classId)
 
     if (error) {
@@ -65,6 +64,12 @@ async function setClassData() {
     className = class_name // set global
     const class_desc = data[0].description
     const teacher_uid = data[0].teacher_uid
+
+    if (students == null) {
+        document.getElementById("loading").style.display = "none"
+        document.getElementById('page').innerHTML = "Error: You are not in this class"
+        return
+    }
 
     if (teacher_uid !== currentUser.id && !students.includes(currentUser.id)) {
         document.getElementById("loading").style.display = "none"
