@@ -175,12 +175,26 @@ async function initializeEditors(lesson) {
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' }});
 
     require(["vs/editor/editor.main"], async function () {
+
+        // define themes
+
+        // TODO: user theme selection
+        const darkResp = await fetch('/js/themes/Tomorrow-Night-Eighties.json')
+        let darkTheme = await darkResp.json()
+        monaco.editor.defineTheme('dark-default', darkTheme)
+
+        const lightResp = await fetch('/js/themes/GitHub Light.json')
+        let lightTheme = await lightResp.json()
+        monaco.editor.defineTheme('light-default', lightTheme)
+
+        let currentTheme = getColorScheme() == "dark" ? 'dark-default' : 'light-default'
+
         window.htmlEditor = await monaco.editor.create(document.getElementById('html-editor'), {
             value: [
                 ''
             ].join('\n'),
             language: 'html',
-            theme: getColorScheme() == "dark" ? 'vs-dark' : 'vs',
+            theme: currentTheme,
         automaticLayout: true
         });
 
@@ -189,7 +203,7 @@ async function initializeEditors(lesson) {
                 ''
             ].join('\n'),
             language: 'css',
-            theme: getColorScheme() == "dark" ? 'vs-dark' : 'vs',
+            theme:  currentTheme,
         automaticLayout: true
         });
 
@@ -198,7 +212,7 @@ async function initializeEditors(lesson) {
                 ''
             ].join('\n'),
             language: 'javascript',
-            theme: getColorScheme() == "dark" ? 'vs-dark' : 'vs',
+            theme: currentTheme,
         automaticLayout: true
         });
 
