@@ -55,7 +55,7 @@ body {
     cursor: pointer;
 }
 
-#submit {
+.submit {
     background-color: var(--accent-color);
     color: var(--bg-color);
     border: solid 2px transparent;
@@ -65,7 +65,7 @@ body {
     cursor: pointer;
 }
 
-#submit:hover {
+.submit:hover {
     filter: brightness(1.2);
     -webkit-filter: brightness(1.2);
     border: solid 2px var(--accent-color);

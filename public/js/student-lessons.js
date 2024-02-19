@@ -90,7 +90,9 @@ async function setLessonFormat(lesson) {
         setResizer()
 
         document.getElementById("markdown-render").style.display = "none";
-    } else if (lesson.lesson_format == "markdown") {
+    } 
+    
+    if (lesson.lesson_format == "markdown") {
         setResizer()
         document.getElementById("pdf-viewer").style.display = "none";
 
@@ -117,6 +119,31 @@ async function setLessonFormat(lesson) {
         document.getElementById("lesson").style.minWidth = "100%"
         document.getElementById("submit").style.opacity = "0";
         document.getElementById("submit").style.pointerEvents = "none";
+    } 
+
+    if (lesson.lesson_type == "file-project") {
+        document.getElementById("editor").style.display = "none";
+        document.getElementById("lesson").style.minWidth = "100%"
+
+        const button = document.getElementById("submit")
+        const fileInput = document.createElement('input')
+
+        fileInput.type = 'file'
+        fileInput.id = 'file-submit'
+        fileInput.classList.add('submit')
+        fileInput.accept = '.html,.css,.js'
+        fileInput.multiple = true
+        fileInput.innerText = "Submit Files"
+        
+        button.parentNode.replaceChild(fileInput, button)
+
+        const submitButton = document.createElement('button')
+        submitButton.classList.add("submit")
+        submitButton.innerText = window.alreadySubmitted ? "Update Submission" : "Submit"
+        submitButton.addEventListener("click", submitFiles)
+        
+        fileInput.parentNode.appendChild(submitButton)
+
     } 
     /** TODO: ADD QUIZZES */
 }
@@ -414,6 +441,41 @@ async function checkIfAlreadySubmitted(lesson) {
         window.storedHTMLValue = resp.data[0].htmlContent
         window.storedCSSValue = resp.data[0].cssContent
         window.storedJSValue = resp.data[0].jsContent
+    }
+}
+
+async function readFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            resolve(reader.result)
+        }
+        reader.onerror = reject;
+        reader.readAsText(file)
+    })
+}
+
+async function submitFiles(e) {
+    const files = document.getElementById('file-submit').files
+
+    let htmlContent = ''
+    let cssContent = ''
+    let jsContent = ''
+
+    for (const file of files) {
+        if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
+            htmlContent = await readFile(file)
+        } else if (file.name.endsWith('.css')) {
+            cssContent = await readFile(file)
+        } else if (file.name.endsWith('.js')) {
+            jsContent = await readFile(file);
+        }
+    }
+
+    if (window.alreadySubmitted) {
+        editSubmission(htmlContent, cssContent, jsContent)
+    } else {
+        createSubmission(htmlContent, cssContent, jsContent)
     }
 }
 

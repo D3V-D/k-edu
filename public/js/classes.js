@@ -356,7 +356,7 @@ async function addLessonToModule(lesson, lessonsContainer) {
 
     const lessonType = document.createElement('span')
     lessonType.classList.add("lesson-type")
-    let lessonText = lesson.lesson_type == "info" ? "Informative" : lesson.lesson_type == "project" ? "Project" : "Quiz/Test"
+    let lessonText = lesson.lesson_type == "info" ? "Informative" : lesson.lesson_type == "project" ? "Project" : lesson.lesson_type == "file-project" ? "Project" : "Quiz/Test" 
     lessonType.innerText = lessonText
     lessonType.setAttribute('data-type', lesson.lesson_type)
     lessonType.title = lessonText

@@ -265,6 +265,10 @@ section {
     background-color: #f8e3bb;
 }
 
+.lesson-type[data-type="file-project"] {
+    background-color: #f8e3bb;
+}
+
 .lesson-type[data-type="quiz"] {
     background-color: #b1daeb;
 }

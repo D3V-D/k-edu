@@ -182,25 +182,27 @@ function setResizer() {
 
 // initialize editors
 async function initializeEditors(lesson) {
-    if (lesson.lesson_type !== "project") {
+    if (lesson.lesson_type !== "project" && lesson.lesson_type !== "file-project") {
         return
     }
     
     let editors = ["#html-editor", "#css-editor", "#js-editor"];
 
-    if (!lesson.html_enabled) {
-        document.getElementById("html-editor").style.display = "none";
-        editors = editors.filter(editor => editor !== "#html-editor");
-    }
+    if (lesson.lesson_type == "project") {
+        if (!lesson.html_enabled) {
+            document.getElementById("html-editor").style.display = "none";
+            editors = editors.filter(editor => editor !== "#html-editor");
+        }
 
-    if (!lesson.css_enabled) {
-        document.getElementById("css-editor").style.display = "none";
-        editors = editors.filter(editor => editor !== "#css-editor");
-    }
+        if (!lesson.css_enabled) {
+            document.getElementById("css-editor").style.display = "none";
+            editors = editors.filter(editor => editor !== "#css-editor");
+        }
 
-    if (!lesson.js_enabled) {
-        document.getElementById("js-editor").style.display = "none";
-        editors = editors.filter(editor => editor !== "#js-editor");
+        if (!lesson.js_enabled) {
+            document.getElementById("js-editor").style.display = "none";
+            editors = editors.filter(editor => editor !== "#js-editor");
+        }
     }
 
     Split(editors, {

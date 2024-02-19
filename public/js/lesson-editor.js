@@ -363,7 +363,7 @@ async function handleLessonCreation(e) {
     const lessonFormat = document.getElementById("lesson-format").value
 
     if (lessonType == "project" && !(htmlEnabled || cssEnabled || jsEnabled)) {
-        alert("Project lessons require at least one language to be enabled.")
+        alert("Project lessons require at least one language to be enabled. If you would prefer to only have file submissions, please change the lesson type.")
         return
     }
 
